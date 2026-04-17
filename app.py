@@ -1,11 +1,10 @@
-from flask import Flask, render_template, request, jsonify, send_file, send_from_directory
+from flask import Flask, request, jsonify, send_file
 import sqlite3, pandas as pd, io, os, traceback
 from datetime import datetime
 
-import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-app = Flask(__name__, template_folder=BASE_DIR, static_folder=BASE_DIR, static_url_path='/static')
-DB = 'bodega.db'
+app = Flask(__name__, static_folder=BASE_DIR, static_url_path='/static')
+DB = os.path.join(BASE_DIR, 'bodega.db')
 RACKS = ['J', 'K', 'L', 'M']
 
 ESTRUCTURA_RACKS = {
@@ -96,15 +95,15 @@ init_db()
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return send_file(os.path.join(BASE_DIR, 'Index.html'))
 
 @app.route('/movil')
 def movil():
-    return render_template('movil.html')
+    return send_file(os.path.join(BASE_DIR, 'movil.html'))
 
 @app.route('/escritorio')
 def escritorio():
-    return render_template('escritorio.html')
+    return send_file(os.path.join(BASE_DIR, 'Escritorio.html'))
 
 @app.route('/api/referencias', methods=['GET'])
 def get_referencias():
