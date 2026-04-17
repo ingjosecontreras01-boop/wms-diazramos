@@ -2,7 +2,9 @@ from flask import Flask, render_template, request, jsonify, send_file, send_from
 import sqlite3, pandas as pd, io, os, traceback
 from datetime import datetime
 
-app = Flask(__name__, template_folder='.', static_folder='.', static_url_path='/static')
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app = Flask(__name__, template_folder=BASE_DIR, static_folder=BASE_DIR, static_url_path='/static')
 DB = 'bodega.db'
 RACKS = ['J', 'K', 'L', 'M']
 
