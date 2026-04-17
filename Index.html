@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WMS Bodega — ConstruMole</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+         background: #f4f6f9; min-height: 100vh;
+         display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .logo { text-align:center; margin-bottom: 2rem; }
+  .logo-text { font-size: 2rem; font-weight: 700; color: #0782c2; letter-spacing: -1px; }
+  .logo-text span { color: #eee413; }
+  .logo-sub { font-size: 0.85rem; color: #666; margin-top: 4px; }
+  .cards { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+  .card { background: #fff; border-radius: 16px; border: 1px solid #e0e6ef;
+          padding: 2rem 2.5rem; text-align: center; cursor: pointer;
+          transition: transform .2s, box-shadow .2s; min-width: 220px; }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(7,130,194,.15); }
+  .card-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .card-title { font-size: 1.1rem; font-weight: 600; color: #0782c2; margin-bottom: .4rem; }
+  .card-desc { font-size: 0.85rem; color: #888; line-height: 1.5; }
+  .card.movil { border-top: 4px solid #0782c2; }
+  .card.escritorio { border-top: 4px solid #eee413; }
+  a { text-decoration: none; }
+  .tag { display: inline-block; background: #e8f4fd; color: #0782c2;
+         font-size: 11px; padding: 3px 10px; border-radius: 20px; margin-top: .6rem; }
+</style>
+</head>
+<body>
+<div class="logo">
+  <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:.5rem;">
+    <img src="/static/logo.jpeg" alt="logo" style="height:52px;width:52px;border-radius:12px;object-fit:cover;box-shadow:0 4px 12px rgba(7,130,194,.2);" onerror="this.style.display='none'">
+    <div style="text-align:left;">
+      <div class="logo-text">Dist. Díaz Ramos</div>
+      <div class="logo-sub">Sistema de gestión de bodega</div>
+    </div>
+  </div>
+</div>
+<div class="cards">
+  <a href="/movil">
+    <div class="card movil">
+      <div class="card-icon">📱</div>
+      <div class="card-title">Entrada de mercancía</div>
+      <div class="card-desc">Registra referencias, lotes y posiciones desde el área de bodega</div>
+      <div class="tag">Persona A — bodega</div>
+    </div>
+  </a>
+  <a href="/escritorio">
+    <div class="card escritorio">
+      <div class="card-icon">🖥️</div>
+      <div class="card-title">Panel de control</div>
+      <div class="card-desc">Monitorea estanterías en tiempo real y actualiza el ERP</div>
+      <div class="tag">Persona B — oficina</div>
+    </div>
+  </a>
+</div>
+</body>
+</html>

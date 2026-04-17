@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Entrada — WMS ConstruMole</title>
+<style>
+:root {
+  --azul:#0782c2;--azul-dark:#0763c2;--amarillo:#eee413;
+  --verde:#00b140;--naranja:#fe5000;--agua:#56c2e3;
+  --bg:#f0f4f8;--white:#fff;--text:#1a2a3a;--muted:#6b7a8d;
+  --border:#d8e3ef;--radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:4.5rem;}
+.topbar{background:var(--azul);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;}
+.topbar-logo{color:#fff;font-weight:700;font-size:1.1rem;letter-spacing:-.5px;}
+.topbar-logo span{color:var(--amarillo);}
+
+/* Bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;z-index:100;box-shadow:0 -2px 10px rgba(0,0,0,.08);}
+.bnav-btn{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:none;background:none;color:var(--muted);font-size:.7rem;font-weight:600;transition:.15s;}
+.bnav-btn.active{color:var(--azul);}
+.bnav-btn .bicon{font-size:1.3rem;line-height:1;}
+.bnav-btn.active .bicon-bar{display:block;}
+.bnav-bar{height:3px;width:32px;border-radius:2px;background:transparent;margin-top:2px;}
+.bnav-btn.active .bnav-bar{background:var(--azul);}
+
+/* Modo consulta */
+.modo{display:none;}
+.modo.active{display:block;}
+.container{padding:14px;max-width:520px;margin:0 auto;}
+/* Consulta items */
+.cons-rack-sel{display:flex;gap:8px;margin-bottom:14px;}
+.cons-rack-btn{flex:1;padding:10px;border-radius:10px;border:2px solid var(--border);background:var(--white);font-weight:700;font-size:1rem;color:var(--azul);cursor:pointer;text-align:center;transition:.15s;}
+.cons-rack-btn.active{border-color:var(--azul);background:#e8f4fd;}
+.cons-item{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:12px;}
+.cons-item:active{background:#f0f4f8;}
+.cons-pos-badge{background:#e8f4fd;color:var(--azul);font-family:monospace;font-weight:700;font-size:.82rem;padding:4px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;}
+.cons-ref{font-size:.85rem;font-weight:600;line-height:1.3;}
+.cons-lote{font-size:.73rem;color:var(--muted);margin-top:2px;}
+.cons-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+/* Modal traslado móvil */
+.mov-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;align-items:flex-end;justify-content:center;}
+.mov-overlay.show{display:flex;}
+.mov-sheet{background:#fff;border-radius:16px 16px 0 0;padding:20px;width:100%;max-height:85vh;overflow-y:auto;}
+.mov-title{font-size:1rem;font-weight:700;margin-bottom:4px;}
+.mov-origen{font-size:.8rem;color:var(--muted);margin-bottom:14px;}
+.mov-rack-row{display:flex;gap:8px;margin-bottom:12px;}
+.mov-rack-btn{flex:1;padding:9px;border-radius:8px;border:2px solid var(--border);background:var(--bg);font-weight:700;color:var(--azul);cursor:pointer;font-size:.95rem;}
+.mov-rack-btn.active{border-color:var(--azul);background:#e8f4fd;}
+.mov-pos-list{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-height:240px;overflow-y:auto;margin-bottom:14px;}
+.mov-pos-opt{padding:9px 4px;border-radius:8px;border:2px solid var(--border);background:var(--bg);text-align:center;font-family:monospace;font-size:.75rem;font-weight:700;cursor:pointer;color:var(--text);}
+.mov-pos-opt.selected{border-color:var(--azul);background:#e8f4fd;color:var(--azul);}
+.mov-pos-opt:active{background:#d0e8f8;}
+.step{flex:1;height:4px;border-radius:2px;background:var(--border);transition:.3s;}
+.step.done{background:var(--verde);}
+.step.active{background:var(--azul);}
+.card{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:12px;}
+.card-title{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;}
+label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:5px;font-weight:500;}
+select,input[type=text],input[type=number]{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:16px;color:var(--text);background:var(--white);outline:none;-webkit-appearance:none;}
+select:focus,input:focus{border-color:var(--azul);}
+.btn{display:block;width:100%;padding:14px;border-radius:10px;font-size:1rem;font-weight:600;text-align:center;border:none;cursor:pointer;transition:.15s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azul);color:#fff;}
+.btn-secondary{background:var(--bg);color:var(--azul);border:1.5px solid var(--azul);}
+.btn-success{background:var(--verde);color:#fff;}
+.btn-warn{background:var(--naranja);color:#fff;}
+.btn-sm{padding:8px 14px;font-size:.85rem;width:auto;border-radius:8px;display:inline-block;}
+.btn-row{display:flex;gap:10px;}
+.btn-row .btn{flex:1;}
+.alerta{border-radius:10px;padding:11px 14px;font-size:.875rem;margin-bottom:10px;display:none;gap:8px;align-items:flex-start;}
+.alerta.show{display:flex;}
+.alerta-info{background:#e3f2fd;border:1px solid var(--azul);color:#0d47a1;}
+.alerta-warn{background:#fff8e1;border:1px solid #f9a825;color:#795548;}
+.alerta-ok{background:#e8f5e9;border:1px solid var(--verde);color:#1b5e20;}
+.badge-big{font-size:2.8rem;font-weight:700;color:var(--azul);text-align:center;padding:6px 0;}
+.badge-label{font-size:.8rem;color:var(--muted);text-align:center;margin-bottom:2px;}
+.sobrante-note{font-size:.8rem;color:var(--naranja);font-style:italic;text-align:center;}
+.section{display:none;}
+.section.active{display:block;}
+
+/* Buscador referencia */
+.ref-wrap{position:relative;margin-bottom:12px;}
+.ref-input-row{display:flex;gap:6px;}
+.ref-input-row input{flex:1;}
+.btn-ref-lista{padding:12px 14px;border-radius:10px;border:1.5px solid var(--azul);background:var(--bg);color:var(--azul);font-size:.85rem;font-weight:600;cursor:pointer;white-space:nowrap;}
+.ref-dropdown{position:absolute;top:100%;left:0;right:0;background:var(--white);border:1.5px solid var(--azul);border-top:none;border-radius:0 0 10px 10px;max-height:220px;overflow-y:auto;z-index:200;display:none;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+.ref-dropdown.show{display:block;}
+.ref-option{padding:11px 14px;font-size:.9rem;cursor:pointer;border-bottom:1px solid var(--border);}
+.ref-option:last-child{border-bottom:none;}
+.ref-option:active{background:#e8f4fd;}
+.ref-option .sub{font-size:.75rem;color:var(--muted);}
+.ref-sel-badge{background:#e8f4fd;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:.85rem;display:none;}
+.ref-sel-badge strong{color:var(--azul);}
+
+/* Estibas lotes */
+.estibas-grid{display:flex;flex-direction:column;gap:10px;}
+.estiba-card{background:var(--bg);border:2px solid var(--border);border-radius:10px;padding:12px;}
+.estiba-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.estiba-num{font-size:.85rem;font-weight:700;}
+.lote-row{display:flex;gap:6px;align-items:center;margin-bottom:5px;}
+.lote-row input[type=text]{flex:2;padding:8px 10px;font-size:14px;}
+.lote-row input[type=number]{flex:1;padding:8px 10px;font-size:14px;}
+.btn-del{background:none;border:none;color:#ef5350;font-size:1.3rem;cursor:pointer;padding:2px 6px;flex-shrink:0;}
+.btn-add-lote{background:none;border:1px dashed var(--azul);color:var(--azul);border-radius:8px;padding:7px;font-size:.8rem;cursor:pointer;width:100%;margin-top:4px;}
+.sobrante-card{background:#fff8e1;border:2px solid #f9a825;border-radius:10px;padding:12px;margin-top:10px;}
+.sobrante-title{font-size:.85rem;font-weight:700;color:#795548;margin-bottom:8px;}
+
+/* Rack visual con drag */
+.rack-selector{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.rack-btn-sel{border:2px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--white);transition:.2s;}
+.rack-btn-sel.active{border-color:var(--azul);background:#e8f4fd;}
+.rack-btn-sel .rn{font-size:1.2rem;font-weight:700;color:var(--azul);}
+.rack-btn-sel .rl{font-size:.75rem;color:var(--muted);}
+
+.estibas-pool{display:flex;flex-wrap:wrap;gap:8px;min-height:44px;padding:8px;background:rgba(7,130,194,.05);border-radius:10px;border:2px dashed var(--border);margin-bottom:10px;}
+.estibas-pool-label{font-size:.78rem;color:var(--muted);margin-bottom:5px;}
+.estiba-chip{background:var(--azul);color:#fff;border-radius:8px;padding:8px 14px;font-size:.82rem;font-weight:700;cursor:grab;user-select:none;touch-action:none;transition:.15s;border:3px solid transparent;position:relative;}
+.estiba-chip.sobrante{background:var(--naranja);}
+.estiba-chip.ubicada{background:var(--verde);cursor:default;}
+.estiba-chip.dragging{opacity:.5;transform:scale(.95);}
+
+.rack-svg-container{overflow-x:auto;background:#1a1a2e;border-radius:10px;padding:8px;position:relative;}
+.rack-svg-container svg{display:block;margin:0 auto;}
+.drop-target{transition:fill .1s;}
+.drop-target.drag-over{fill:#eee413 !important;opacity:.9;}
+
+.rack-acciones{display:flex;gap:8px;margin-bottom:8px;}
+.rack-acciones .btn{flex:1;}
+.ubicacion-status{font-size:.78rem;color:var(--muted);margin-top:6px;min-height:18px;}
+
+/* Leyenda */
+.leyenda-rack{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.ley-item{display:flex;align-items:center;gap:4px;font-size:.72rem;color:var(--muted);}
+.ley-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+
+/* Confirmación */
+.confirm-table{width:100%;font-size:.85rem;}
+.confirm-table td{padding:7px 4px;border-bottom:1px solid var(--border);}
+.confirm-table tr:last-child td{border-bottom:none;}
+.confirm-table td:first-child{color:var(--muted);}
+.confirm-table td:last-child{font-weight:600;text-align:right;font-size:.82rem;}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:8px;">
+    <img src="/static/logo.jpeg" alt="logo" style="height:32px;width:32px;border-radius:7px;object-fit:cover;border:2px solid rgba(255,255,255,.3);" onerror="this.style.display='none'">
+    <div>
+      <div style="color:#fff;font-weight:700;font-size:.95rem;letter-spacing:-.3px;line-height:1.1;">Dist. Díaz Ramos</div>
+      <div style="color:var(--amarillo);font-size:.65rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;">Bodega</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button onclick="cambiarModo('consulta')" id="topbar-btn-consulta"
+      style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);color:#fff;padding:6px 13px;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;">
+      Ver / Mover
+    </button>
+    <button onclick="cambiarModo('entrada')" id="topbar-btn-entrada"
+      style="display:none;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);color:#fff;padding:6px 13px;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;">
+      + Entrada
+    </button>
+    <a href="/" style="color:rgba(255,255,255,.8);font-size:.8rem;text-decoration:none">Inicio</a>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- MODO ENTRADA -->
+<div class="modo active" id="modo-entrada">
+  <div class="step-bar">
+    <div class="step active" id="s1"></div>
+    <div class="step" id="s2"></div>
+    <div class="step" id="s3"></div>
+    <div class="step" id="s4"></div>
+  </div>
+
+  <!-- PASO 1 -->
+  <div class="section active" id="sec1">
+    <div class="card">
+      <div class="card-title">Paso 1 — Referencia y cantidad</div>
+      <label>Referencia</label>
+      <div class="ref-wrap">
+        <div class="ref-input-row">
+          <input type="text" id="ref-search" placeholder="Buscar o escribir referencia..." oninput="filtrarRefs(this.value)" autocomplete="off" onfocus="mostrarTodas()">
+          <button class="btn-ref-lista" onclick="toggleLista()">Lista ▾</button>
+        </div>
+        <div class="ref-dropdown" id="ref-dropdown"></div>
+      </div>
+      <div class="ref-sel-badge" id="ref-sel-badge">
+        <strong id="ref-sel-nombre"></strong>
+        <div style="font-size:.75rem;color:var(--muted)" id="ref-sel-info"></div>
+        <button onclick="limpiarRef()" style="background:none;border:none;color:var(--naranja);font-size:.78rem;cursor:pointer;margin-top:4px;">× Cambiar referencia</button>
+      </div>
+      <label>Unidades que llegaron</label>
+      <input type="number" id="unidades" placeholder="Ej: 200" min="1" oninput="calcEstibas()">
+    </div>
+    <div class="alerta alerta-info" id="alerta-calc" style="display:none">
+      <span>ℹ</span><div id="alerta-calc-txt"></div>
+    </div>
+    <div class="alerta alerta-warn" id="alerta-sobrante">
+      <span>⚠</span><div id="alerta-sobrante-txt"></div>
+    </div>
+    <div class="card" id="resumen-card" style="display:none">
+      <div class="badge-label">Estibas completas</div>
+      <div class="badge-big" id="estibas-num">0</div>
+      <div class="sobrante-note" id="sobrante-note" style="display:none"></div>
+    </div>
+    <button class="btn btn-primary" id="btn-p2" onclick="irPaso2()" disabled>Continuar →</button>
+  </div>
+
+  <!-- PASO 2 -->
+  <div class="section" id="sec2">
+    <div class="card">
+      <div class="card-title">Paso 2 — Lotes por estiba</div>
+      <div style="font-size:.82rem;color:var(--muted);margin-bottom:12px">Una estiba puede tener varios lotes. Ingresa lote y cantidad.</div>
+      <div class="estibas-grid" id="estibas-grid"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="irSec(1)">Atrás</button>
+      <button class="btn btn-primary" onclick="irPaso3()">Continuar →</button>
+    </div>
+  </div>
+
+  <!-- PASO 3 -->
+  <div class="section" id="sec3">
+    <div class="card">
+      <div class="card-title">Paso 3 — Rack y ubicación</div>
+      <label style="margin-bottom:8px">Selecciona el rack</label>
+      <div class="rack-selector" id="rack-selector"></div>
+    </div>
+    <div id="rack-visual-section" style="display:none">
+      <div class="card">
+        <div class="card-title" id="rack-visual-title">Rack — Ubica las estibas</div>
+        <div class="rack-acciones">
+          <button class="btn btn-secondary btn-sm" onclick="ubicarAleatorio()">Aleatorio (juntas)</button>
+          <button class="btn btn-warn btn-sm" onclick="limpiarUbicacion()">Limpiar</button>
+        </div>
+        <div class="estibas-pool-label">Arrastra una estiba al rack:</div>
+        <div class="estibas-pool" id="estibas-pool"></div>
+        <div class="rack-svg-container" id="rack-svg-container">
+          <svg id="rack-svg"></svg>
+        </div>
+        <div class="leyenda-rack" id="leyenda-rack">
+          <div class="ley-item"><div class="ley-dot" style="background:#2a2a3e;border:1px solid #444"></div> Libre</div>
+          <div class="ley-item"><div class="ley-dot" style="background:#111122"></div> Inactiva</div>
+          <div class="ley-item"><div class="ley-dot" style="background:#00b140"></div> Esta entrada</div>
+        </div>
+        <div class="ubicacion-status" id="ubicacion-status"></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="irSec(2)">Atrás</button>
+      <button class="btn btn-primary" id="btn-p4" onclick="irPaso4()" disabled>Confirmar →</button>
+    </div>
+  </div>
+
+  <!-- PASO 4 -->
+  <div class="section" id="sec4">
+    <div class="card">
+      <div class="card-title">Paso 4 — Confirmar entrada</div>
+      <table class="confirm-table" id="confirm-table"></table>
+    </div>
+
+    <!-- Barra de estado envío -->
+    <div id="envio-status" style="display:none;border-radius:10px;overflow:hidden;margin-bottom:10px;">
+      <!-- Barra de progreso animada -->
+      <div id="envio-progress-wrap" style="display:none;background:#e8f4fd;padding:12px 14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <span style="font-size:.85rem;font-weight:600;color:#0782c2" id="envio-label">Enviando...</span>
+          <span style="font-size:.75rem;color:#0782c2" id="envio-intento"></span>
+        </div>
+        <div style="background:#d0e8f8;border-radius:4px;height:6px;overflow:hidden;">
+          <div id="envio-bar" style="height:100%;background:#0782c2;border-radius:4px;width:0%;transition:width .4s ease;"></div>
+        </div>
+      </div>
+      <!-- Panel de error copiable -->
+      <div id="envio-error-wrap" style="display:none;background:#fff5f5;border:1.5px solid #fe5000;border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:1rem;">⚠</span>
+          <span style="font-size:.85rem;font-weight:700;color:#fe5000;">Error al guardar</span>
+        </div>
+        <div style="font-size:.8rem;color:#555;margin-bottom:10px;">Copia este mensaje y compártelo con soporte:</div>
+        <div id="envio-error-txt"
+          style="background:#fff;border:1px solid #fcd0c0;border-radius:8px;padding:10px;font-family:monospace;font-size:.75rem;color:#333;word-break:break-all;line-height:1.6;user-select:all;cursor:text;white-space:pre-wrap;max-height:120px;overflow-y:auto;"></div>
+        <button onclick="copiarError()"
+          style="margin-top:10px;width:100%;padding:10px;background:#fe5000;color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;">
+          Copiar error
+        </button>
+        <button onclick="reintentarEnvio()"
+          style="margin-top:6px;width:100%;padding:10px;background:#f0f4f8;color:#0782c2;border:1.5px solid #0782c2;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;">
+          Reintentar
+        </button>
+      </div>
+    </div>
+
+    <div class="alerta alerta-ok" id="alerta-exito">
+      <span>✅</span><div>Entrada registrada. Ya aparece en el panel de escritorio.</div>
+    </div>
+    <div class="btn-row" id="confirm-btns">
+      <button class="btn btn-secondary" onclick="irSec(3)">Atrás</button>
+      <button class="btn btn-success" id="btn-guardar" onclick="confirmarEntrada()">Guardar entrada</button>
+    </div>
+    <button class="btn btn-primary" id="btn-nueva" style="display:none;margin-top:10px" onclick="nueva()">+ Nueva entrada</button>
+  </div>
+</div><!-- /modo-entrada -->
+
+<!-- MODO CONSULTA / TRASLADO -->
+<div class="modo" id="modo-consulta">
+  <div style="margin-bottom:12px;">
+    <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Rack</div>
+    <div class="cons-rack-sel" id="cons-rack-sel">
+      <button class="cons-rack-btn active" onclick="selConsRack('J',this)">J</button>
+      <button class="cons-rack-btn" onclick="selConsRack('K',this)">K</button>
+      <button class="cons-rack-btn" onclick="selConsRack('L',this)">L</button>
+      <button class="cons-rack-btn" onclick="selConsRack('M',this)">M</button>
+    </div>
+    <div style="font-size:.75rem;color:var(--muted);margin-bottom:8px;" id="cons-info">Cargando...</div>
+  </div>
+  <div id="cons-lista"></div>
+</div>
+
+<!-- MODO SALIDA -->
+<div class="modo" id="modo-salida">
+  <div style="margin-bottom:12px;">
+    <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Rack</div>
+    <div class="cons-rack-sel" id="sal-rack-sel">
+      <button class="cons-rack-btn active" onclick="selSalRack('J',this)">J</button>
+      <button class="cons-rack-btn" onclick="selSalRack('K',this)">K</button>
+      <button class="cons-rack-btn" onclick="selSalRack('L',this)">L</button>
+      <button class="cons-rack-btn" onclick="selSalRack('M',this)">M</button>
+    </div>
+    <div style="font-size:.75rem;color:var(--muted);margin-bottom:8px;" id="sal-info">Selecciona un rack</div>
+  </div>
+  <!-- SVG estantería salida -->
+  <div class="rack-svg-container" id="sal-svg-container" style="display:none;">
+    <svg id="sal-svg"></svg>
+  </div>
+  <div class="leyenda-rack" style="margin-top:8px;" id="sal-leyenda">
+    <div class="ley-item"><div class="ley-dot" style="background:#2a2a3e;border:1px solid #444"></div> Libre</div>
+    <div class="ley-item"><div class="ley-dot" style="background:#111122"></div> Inactiva</div>
+    <div class="ley-item"><div class="ley-dot" style="background:#fe5000"></div> Ocupada — toca para bajar</div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- Bottom nav -->
+<div class="bottom-nav">
+  <button class="bnav-btn active" id="bnav-entrada" onclick="cambiarModo('entrada')">
+    <span class="bicon">+</span>
+    <span>Entrada</span>
+    <div class="bnav-bar"></div>
+  </button>
+  <button class="bnav-btn" id="bnav-salida" onclick="cambiarModo('salida')">
+    <span class="bicon" style="font-size:1rem;">↓</span>
+    <span>Salida</span>
+    <div class="bnav-bar"></div>
+  </button>
+  <button class="bnav-btn" id="bnav-consulta" onclick="cambiarModo('consulta')">
+    <span class="bicon">&#9776;</span>
+    <span>Mover</span>
+    <div class="bnav-bar"></div>
+  </button>
+</div>
+
+<!-- Sheet SALIDA -->
+<div class="mov-overlay" id="sal-overlay">
+  <div class="mov-sheet">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;position:sticky;top:0;background:#fff;padding-bottom:10px;border-bottom:1px solid var(--border);z-index:10;">
+      <div class="mov-title" style="color:#fe5000;">Registrar salida</div>
+      <button onclick="cerrarSalSheet()" style="background:#f0f4f8;border:1px solid var(--border);font-size:1.1rem;color:var(--muted);cursor:pointer;border-radius:8px;padding:6px 12px;font-weight:700;">× Cerrar</button>
+    </div>
+
+    <!-- Info posición -->
+    <div style="background:#fff5f5;border:1.5px solid #fcd0c0;border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+      <div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Posición</div>
+      <div id="sal-pos-badge" style="font-family:monospace;font-weight:700;font-size:1.2rem;color:#fe5000;margin-bottom:6px;"></div>
+      <div style="font-size:.85rem;font-weight:600;margin-bottom:4px;" id="sal-ref-txt"></div>
+      <div style="font-size:.78rem;color:var(--muted);" id="sal-lote-txt"></div>
+      <div style="font-size:.78rem;color:var(--muted);" id="sal-fecha-txt"></div>
+    </div>
+
+    <!-- Tipo salida -->
+    <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Tipo de salida</div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;">
+      <button id="sal-tipo-total" onclick="selSalTipo('total')"
+        style="flex:1;padding:10px;border-radius:10px;border:2px solid #fe5000;background:#fff5f5;color:#fe5000;font-weight:700;font-size:.9rem;cursor:pointer;">
+        Salida total
+      </button>
+      <button id="sal-tipo-parcial" onclick="selSalTipo('parcial')"
+        style="flex:1;padding:10px;border-radius:10px;border:2px solid var(--border);background:var(--bg);color:var(--muted);font-weight:700;font-size:.9rem;cursor:pointer;">
+        Salida parcial
+      </button>
+    </div>
+
+    <!-- Salida parcial - unidades -->
+    <div id="sal-parcial-wrap" style="display:none;margin-bottom:14px;">
+      <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Unidades que salen</div>
+      <input type="number" id="sal-unidades" min="1" placeholder="Ej: 10"
+        style="width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:1.1rem;font-family:monospace;font-weight:700;text-align:center;outline:none;"
+        oninput="validarSalida()">
+      <div style="font-size:.75rem;color:var(--muted);margin-top:6px;text-align:center;" id="sal-parcial-info"></div>
+    </div>
+
+    <!-- Nota opcional -->
+    <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Nota (opcional)</div>
+    <input type="text" id="sal-nota" placeholder="Ej: Despacho factura 12345"
+      style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:.9rem;outline:none;margin-bottom:14px;">
+
+    <div id="sal-msg" style="font-size:.82rem;padding:8px 12px;border-radius:8px;display:none;margin-bottom:10px;"></div>
+    <button id="sal-btn-confirmar" onclick="confirmarSalida()"
+      style="width:100%;padding:14px;background:#fe5000;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;opacity:.4;transition:.2s;" disabled>
+      Confirmar salida
+    </button>
+  </div>
+</div>
+<div class="mov-overlay" id="mov-overlay">
+  <div class="mov-sheet">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;position:sticky;top:0;background:#fff;padding-bottom:10px;border-bottom:1px solid var(--border);z-index:10;">
+      <div class="mov-title">Cambiar ubicación</div>
+      <button onclick="cerrarMovSheet()" style="background:#f0f4f8;border:1px solid var(--border);font-size:1.1rem;color:var(--muted);cursor:pointer;border-radius:8px;padding:6px 12px;font-weight:700;line-height:1;">× Cerrar</button>
+    </div>
+
+    <!-- Origen → Destino visual -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;background:#f0f4f8;border-radius:10px;padding:12px 14px;">
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:.68rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Origen</div>
+        <div id="mov-badge-origen" style="font-family:monospace;font-weight:700;font-size:1.1rem;color:var(--naranja);background:#fff3e0;padding:6px 10px;border-radius:8px;border:2px solid #ff9800;">—</div>
+      </div>
+      <div style="font-size:1.4rem;color:var(--muted);">→</div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:.68rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Destino</div>
+        <div id="mov-badge-destino" style="font-family:monospace;font-weight:700;font-size:1.1rem;color:var(--muted);background:#fff;padding:6px 10px;border-radius:8px;border:2px dashed var(--border);">?</div>
+      </div>
+    </div>
+
+    <!-- Ref info -->
+    <div id="mov-ref-info" style="font-size:.8rem;color:var(--muted);margin-bottom:14px;padding:0 2px;"></div>
+
+    <!-- Paso 1: Rack destino -->
+    <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">1. Rack destino</div>
+    <div class="mov-rack-row" style="margin-bottom:16px;">
+      <button class="mov-rack-btn" onclick="selMovRack('J',this)">J</button>
+      <button class="mov-rack-btn" onclick="selMovRack('K',this)">K</button>
+      <button class="mov-rack-btn" onclick="selMovRack('L',this)">L</button>
+      <button class="mov-rack-btn" onclick="selMovRack('M',this)">M</button>
+    </div>
+
+    <!-- Paso 2: Nivel -->
+    <div id="mov-nivel-section" style="display:none;">
+      <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">2. Nivel</div>
+      <div class="mov-rack-row" id="mov-nivel-btns" style="flex-wrap:wrap;margin-bottom:16px;"></div>
+    </div>
+
+    <!-- Paso 3: Posición -->
+    <div id="mov-pos-section" style="display:none;">
+      <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">3. Posición libre</div>
+      <div class="mov-pos-list" id="mov-pos-list" style="grid-template-columns:repeat(4,1fr);max-height:160px;margin-bottom:16px;"></div>
+    </div>
+
+    <div id="mov-msg" style="font-size:.82rem;padding:8px 12px;border-radius:8px;display:none;margin-bottom:10px;"></div>
+    <button id="mov-btn-confirmar" onclick="confirmarMovMobile()" disabled
+      style="width:100%;padding:13px;background:var(--naranja);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;opacity:.4;transition:.2s;">
+      Confirmar traslado
+    </button>
+  </div>
+</div>
+
+<script>
+// ── MODO SALIDA ──
+let salRackActual='J', salInvId=null, salTipo='total', salUpE=1;
+
+async function selSalRack(rack, btn){
+  salRackActual=rack;
+  document.querySelectorAll('#sal-rack-sel .cons-rack-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  await cargarSalida(rack);
+}
+
+let salRackData = [];
+
+async function cargarSalida(rack){
+  salRackActual=rack;
+  document.getElementById('sal-info').textContent='Cargando...';
+  document.getElementById('sal-svg-container').style.display='none';
+  const r=await fetch('/api/estado_racks');
+  salRackData=await r.json();
+  const items=salRackData.filter(p=>p.rack===rack);
+  const ocupadas=items.filter(p=>p.inv_id).length;
+  const activas=items.filter(p=>p.activa).length;
+  document.getElementById('sal-info').textContent=
+    `Rack ${rack} · ${ocupadas} ocupadas · ${activas-ocupadas} libres · toca una posición para bajar`;
+  document.getElementById('sal-svg-container').style.display='block';
+  renderSalSVG(rack, items);
+}
+
+function renderSalSVG(rack, datos){
+  const struct=ESTRUCTURA_MOV[rack]||{};
+  const SW=PL+CLW+MODULOS_MOV.length*(2*CW+CLW)+10;
+  const SH=PT+NIVELES_MOV.length*(CH+VH)+16;
+  const svg=document.getElementById('sal-svg');
+  svg.setAttribute('viewBox',`0 0 ${SW} ${SH}`);
+  svg.setAttribute('width','100%');
+  svg.innerHTML='';
+  const bg=mkEl('rect');bg.setAttribute('width',SW);bg.setAttribute('height',SH);
+  bg.setAttribute('fill','#1a1a2e');bg.setAttribute('rx','8');svg.appendChild(bg);
+
+  MODULOS_MOV.forEach((mod,mi)=>{
+    const x0=PL+CLW+mi*(2*CW+CLW);
+    const tl=mkEl('text');tl.setAttribute('x',x0+CW);tl.setAttribute('y',PT-6);
+    tl.setAttribute('text-anchor','middle');tl.setAttribute('fill','#E65100');
+    tl.setAttribute('font-size','9');tl.setAttribute('font-weight','bold');
+    tl.textContent='M'+(mi+1);svg.appendChild(tl);
+  });
+
+  NIVELES_MOV.forEach((nivel,ni)=>{
+    const activasNivel=struct[nivel]||[];
+    const y0=PT+ni*(CH+VH);
+    const tl=mkEl('text');tl.setAttribute('x',PL-4);tl.setAttribute('y',y0+CH/2+1);
+    tl.setAttribute('text-anchor','end');tl.setAttribute('dominant-baseline','central');
+    tl.setAttribute('fill','#90caf9');tl.setAttribute('font-size','9');tl.setAttribute('font-weight','bold');
+    tl.textContent=nivel;svg.appendChild(tl);
+
+    MODULOS_MOV.forEach((mod,mi)=>{
+      const x0=PL+CLW+mi*(2*CW+CLW);
+      const colL=mkEl('rect');colL.setAttribute('x',x0-CLW);colL.setAttribute('y',y0);
+      colL.setAttribute('width',CLW);colL.setAttribute('height',CH+VH);colL.setAttribute('fill','#1565C0');svg.appendChild(colL);
+
+      mod.forEach((pos,pi)=>{
+        const cx=x0+pi*CW;
+        const activa=activasNivel.includes(pos);
+        const rect=mkEl('rect');
+        rect.setAttribute('x',cx+1);rect.setAttribute('y',y0);
+        rect.setAttribute('width',CW-2);rect.setAttribute('height',CH);rect.setAttribute('rx','3');
+
+        if(!activa){
+          rect.setAttribute('fill','#0d0d1a');svg.appendChild(rect);
+        } else {
+          const posData=datos.find(p=>p.nivel===nivel&&p.posicion===pos);
+          const ocupada=posData&&posData.inv_id;
+          if(ocupada){
+            rect.setAttribute('fill', posData.color||'#fe5000');
+            rect.setAttribute('stroke','rgba(255,255,255,0.4)');rect.setAttribute('stroke-width','1');
+            rect.style.cursor='pointer';
+            rect.addEventListener('click',()=>{
+              const codigo=`${rack}-${nivel}-${pos}`;
+              abrirSalSheet(posData, codigo);
+            });
+            svg.appendChild(rect);
+            const txt=mkEl('text');txt.setAttribute('x',cx+CW/2);txt.setAttribute('y',y0+CH/2);
+            txt.setAttribute('text-anchor','middle');txt.setAttribute('dominant-baseline','central');
+            txt.setAttribute('fill','#fff');txt.setAttribute('font-size','7');txt.setAttribute('font-weight','bold');
+            txt.setAttribute('pointer-events','none');txt.textContent=pos;svg.appendChild(txt);
+          } else {
+            rect.setAttribute('fill','#2a2a3e');svg.appendChild(rect);
+            const txt=mkEl('text');txt.setAttribute('x',cx+CW/2);txt.setAttribute('y',y0+CH/2);
+            txt.setAttribute('text-anchor','middle');txt.setAttribute('dominant-baseline','central');
+            txt.setAttribute('fill','#3a4a6a');txt.setAttribute('font-size','8');
+            txt.setAttribute('pointer-events','none');txt.textContent=pos;svg.appendChild(txt);
+          }
+        }
+      });
+      if(mi===MODULOS_MOV.length-1){
+        const colR=mkEl('rect');colR.setAttribute('x',x0+2*CW);colR.setAttribute('y',y0);
+        colR.setAttribute('width',CLW);colR.setAttribute('height',CH+VH);colR.setAttribute('fill','#1565C0');svg.appendChild(colR);
+      }
+    });
+    const viga=mkEl('rect');viga.setAttribute('x',PL);viga.setAttribute('y',y0+CH);
+    viga.setAttribute('width',MODULOS_MOV.length*(2*CW+CLW)+CLW);viga.setAttribute('height',VH);
+    viga.setAttribute('fill','#E65100');svg.appendChild(viga);
+  });
+}
+
+function abrirSalSheet(item, codigo){
+  salInvId=item.inv_id;
+  salTipo='total';
+  salUpE=item.unidades_por_estiba||1;
+
+  document.getElementById('sal-pos-badge').textContent=codigo;
+  document.getElementById('sal-ref-txt').textContent=item.referencia;
+  const lotes=item.lote?item.lote.split(' | ').map(l=>{
+    const m=l.trim().match(/^(.+?)\((\d+)u\)$/);
+    return m?`${m[1]} (${m[2]}u)`:l.trim();
+  }):[];
+  document.getElementById('sal-lote-txt').textContent=lotes.length?'Lotes: '+lotes.join(' · '):'Sin lote';
+  document.getElementById('sal-fecha-txt').textContent=item.fecha_entrada?'Entrada: '+item.fecha_entrada.substring(0,16):'';
+
+  // Reset tipo
+  selSalTipo('total');
+  document.getElementById('sal-unidades').value='';
+  document.getElementById('sal-nota').value='';
+  document.getElementById('sal-msg').style.display='none';
+  document.getElementById('sal-parcial-info').textContent=`Capacidad estiba: ${salUpE} u`;
+
+  document.getElementById('sal-overlay').classList.add('show');
+}
+
+function selSalTipo(tipo){
+  salTipo=tipo;
+  const btnTotal=document.getElementById('sal-tipo-total');
+  const btnParcial=document.getElementById('sal-tipo-parcial');
+  const parcialWrap=document.getElementById('sal-parcial-wrap');
+  if(tipo==='total'){
+    btnTotal.style.borderColor='#fe5000';btnTotal.style.background='#fff5f5';btnTotal.style.color='#fe5000';
+    btnParcial.style.borderColor='var(--border)';btnParcial.style.background='var(--bg)';btnParcial.style.color='var(--muted)';
+    parcialWrap.style.display='none';
+    const btn=document.getElementById('sal-btn-confirmar');
+    btn.disabled=false;btn.style.opacity='1';
+  } else {
+    btnParcial.style.borderColor='#fe5000';btnParcial.style.background='#fff5f5';btnParcial.style.color='#fe5000';
+    btnTotal.style.borderColor='var(--border)';btnTotal.style.background='var(--bg)';btnTotal.style.color='var(--muted)';
+    parcialWrap.style.display='block';
+    const btn=document.getElementById('sal-btn-confirmar');
+    btn.disabled=true;btn.style.opacity='.4';
+  }
+}
+
+function validarSalida(){
+  const val=parseInt(document.getElementById('sal-unidades').value)||0;
+  const btn=document.getElementById('sal-btn-confirmar');
+  if(val>0){
+    btn.disabled=false;btn.style.opacity='1';
+    document.getElementById('sal-parcial-info').textContent=`${val} de ${salUpE} u saldrán · quedan ${salUpE-val} u`;
+  } else {
+    btn.disabled=true;btn.style.opacity='.4';
+  }
+}
+
+function cerrarSalSheet(){
+  document.getElementById('sal-overlay').classList.remove('show');
+}
+
+async function confirmarSalida(){
+  const btn=document.getElementById('sal-btn-confirmar');
+  btn.disabled=true;btn.style.opacity='.6';btn.textContent='Registrando...';
+  const nota=document.getElementById('sal-nota').value.trim();
+  const unidades=salTipo==='parcial'?parseInt(document.getElementById('sal-unidades').value)||0:null;
+  const msg=document.getElementById('sal-msg');
+  try {
+    const resp=await fetch('/api/registrar_salida',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({inv_id:salInvId,tipo:salTipo,unidades,nota})
+    });
+    const d=await resp.json();
+    if(d.ok){
+      msg.style.display='block';
+      msg.style.background='#e8f5e9';msg.style.border='1px solid var(--verde)';msg.style.color='#1b5e20';
+      msg.textContent=salTipo==='total'?'Posición liberada correctamente':`Salida parcial registrada (${unidades} u)`;
+      btn.textContent='Listo';
+      setTimeout(()=>{ cerrarSalSheet(); cargarSalida(salRackActual); },1200);
+    } else {
+      msg.style.display='block';
+      msg.style.background='#fff5f5';msg.style.border='1px solid #fe5000';msg.style.color='#c62828';
+      msg.textContent='Error: '+(d.error||'No se pudo registrar');
+      btn.disabled=false;btn.style.opacity='1';btn.textContent='Confirmar salida';
+    }
+  } catch(e){
+    msg.style.display='block';msg.style.background='#fff5f5';msg.style.border='1px solid #fe5000';msg.style.color='#c62828';
+    msg.textContent='Error de conexión: '+e.message;
+    btn.disabled=false;btn.style.opacity='1';btn.textContent='Confirmar salida';
+  }
+}
+function cambiarModo(modo) {
+  document.getElementById('modo-entrada').classList.toggle('active', modo==='entrada');
+  document.getElementById('modo-consulta').classList.toggle('active', modo==='consulta');
+  document.getElementById('modo-salida').classList.toggle('active', modo==='salida');
+  document.getElementById('bnav-entrada').classList.toggle('active', modo==='entrada');
+  document.getElementById('bnav-consulta').classList.toggle('active', modo==='consulta');
+  document.getElementById('bnav-salida').classList.toggle('active', modo==='salida');
+  // Topbar buttons
+  document.getElementById('topbar-btn-consulta').style.display = modo==='entrada' ? '' : 'none';
+  document.getElementById('topbar-btn-entrada').style.display = modo==='consulta'||modo==='salida' ? '' : 'none';
+  if (modo==='consulta') cargarConsulta('J');
+  if (modo==='salida') cargarSalida('J');
+}
+
+// ── MODO CONSULTA ──
+let consRackActual = 'J', movInvId = null, movPosSelId = null;
+
+async function selConsRack(rack, btn) {
+  consRackActual = rack;
+  document.querySelectorAll('.cons-rack-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  await cargarConsulta(rack);
+}
+
+async function cargarConsulta(rack) {
+  consRackActual = rack;
+  document.getElementById('cons-info').textContent = 'Cargando...';
+  document.getElementById('cons-lista').innerHTML = '';
+  const r = await fetch('/api/estado_racks');
+  const data = await r.json();
+  const items = data.filter(p => p.rack === rack && p.inv_id);
+  const total = data.filter(p => p.rack === rack && p.activa).length;
+  document.getElementById('cons-info').textContent =
+    `Rack ${rack} · ${items.length} ocupadas · ${total - items.length} libres`;
+  if (!items.length) {
+    document.getElementById('cons-lista').innerHTML =
+      `<div style="text-align:center;color:var(--muted);padding:30px;font-size:.9rem;">Sin estibas en Rack ${rack}</div>`;
+    return;
+  }
+  // Ordenar por nivel y posición
+  items.sort((a,b) => a.nivel.localeCompare(b.nivel) || a.posicion.localeCompare(b.posicion));
+  const lista = document.getElementById('cons-lista');
+  lista.innerHTML = '';
+  items.forEach(item => {
+    const codigo = `${item.rack}-${item.nivel}-${item.posicion}`;
+    const lotes = item.lote ? item.lote.split(' | ').map(l=>l.trim()).filter(l=>l) : [];
+    const div = document.createElement('div');
+    div.className = 'cons-item';
+    div.innerHTML = `
+      <div class="cons-dot" style="background:${item.color||'#0782c2'}"></div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+          <div class="cons-pos-badge">${codigo}</div>
+          ${item.actualizado_erp ? '<span style="font-size:.68rem;background:#e8f5e9;color:#1b5e20;padding:2px 6px;border-radius:4px;font-weight:700;">ERP ✓</span>' : ''}
+        </div>
+        <div class="cons-ref">${item.referencia}</div>
+        <div class="cons-lote">${lotes.length ? 'Lotes: '+lotes.join(' · ') : 'Sin lote'} · ${item.fecha_entrada ? item.fecha_entrada.substring(0,16) : ''}</div>
+      </div>
+      <div style="color:var(--naranja);font-size:1.2rem;flex-shrink:0;">›</div>`;
+    div.onclick = () => abrirMovSheet(item, codigo);
+    lista.appendChild(div);
+  });
+}
+
+function abrirMovSheet(item, codigo) {
+  movInvId = item.inv_id;
+  movPosSelId = null;
+  movPosLibresCache = [];
+
+  // Badges origen/destino
+  document.getElementById('mov-badge-origen').textContent = codigo;
+  document.getElementById('mov-badge-destino').textContent = '?';
+  document.getElementById('mov-badge-destino').style.color = 'var(--muted)';
+  document.getElementById('mov-badge-destino').style.borderColor = 'var(--border)';
+  document.getElementById('mov-badge-destino').style.borderStyle = 'dashed';
+
+  // Info ref
+  const lotes = item.lote ? item.lote.split(' | ').filter(l=>l.trim()) : [];
+  document.getElementById('mov-ref-info').innerHTML =
+    `<strong>${item.referencia}</strong>${lotes.length ? ' · Lotes: '+lotes.join(', ') : ''}`;
+
+  // Reset
+  document.getElementById('mov-nivel-section').style.display = 'none';
+  document.getElementById('mov-pos-section').style.display = 'none';
+  document.getElementById('mov-pos-list').innerHTML = '';
+  document.getElementById('mov-msg').style.display = 'none';
+  const btn = document.getElementById('mov-btn-confirmar');
+  btn.disabled = true; btn.style.opacity = '.4'; btn.textContent = 'Confirmar traslado';
+  document.querySelectorAll('.mov-rack-btn').forEach(b => { b.classList.remove('active'); });
+
+  // Pre-seleccionar rack actual
+  const rackBtn = Array.from(document.querySelectorAll('.mov-rack-btn')).find(b => b.textContent.trim() === item.rack);
+  if (rackBtn) selMovRack(item.rack, rackBtn);
+
+  document.getElementById('mov-overlay').classList.add('show');
+}
+
+let movPosLibresCache = [], movRackSel = null, movNivelSel = null;
+
+function cerrarMovSheet() {
+  document.getElementById('mov-overlay').classList.remove('show');
+}
+
+async function selMovRack(rack, btn) {
+  movRackSel = rack; movNivelSel = null; movPosSelId = null;
+  document.querySelectorAll('.mov-rack-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Reset niveles y posiciones
+  document.getElementById('mov-nivel-section').style.display = 'none';
+  document.getElementById('mov-pos-section').style.display = 'none';
+  document.getElementById('mov-badge-destino').textContent = '?';
+  document.getElementById('mov-badge-destino').style.color = 'var(--muted)';
+  document.getElementById('mov-badge-destino').style.borderColor = 'var(--border)';
+  document.getElementById('mov-badge-destino').style.borderStyle = 'dashed';
+  const btnC = document.getElementById('mov-btn-confirmar');
+  btnC.disabled = true; btnC.style.opacity = '.4';
+
+  // Cargar posiciones libres
+  const r = await fetch(`/api/posiciones_libres?rack=${rack}`);
+  const d = await r.json();
+  movPosLibresCache = d.posiciones || [];
+
+  if (!movPosLibresCache.length) {
+    document.getElementById('mov-nivel-section').style.display = 'none';
+    const msg = document.getElementById('mov-msg');
+    msg.style.display = 'block';
+    msg.style.background = '#fff8e1'; msg.style.border = '1px solid #f9a825'; msg.style.color = '#795548';
+    msg.textContent = `Sin posiciones libres en Rack ${rack}`;
+    return;
+  }
+  document.getElementById('mov-msg').style.display = 'none';
+
+  // Construir botones de nivel con conteo
+  const nivelesDisp = {};
+  movPosLibresCache.forEach(p => {
+    nivelesDisp[p.nivel] = (nivelesDisp[p.nivel] || 0) + 1;
+  });
+  const nivelesOrden = ['N7','N6','N5','N4','N3','N2','N1'].filter(n => nivelesDisp[n]);
+  const nivelBtns = document.getElementById('mov-nivel-btns');
+  nivelBtns.innerHTML = '';
+  nivelesOrden.forEach(nivel => {
+    const b = document.createElement('button');
+    b.className = 'mov-rack-btn';
+    b.style.fontSize = '.82rem';
+    b.innerHTML = `${nivel}<br><span style="font-size:.68rem;font-weight:400;color:var(--muted)">${nivelesDisp[nivel]} libres</span>`;
+    b.onclick = () => selMovNivel(nivel, b);
+    nivelBtns.appendChild(b);
+  });
+  document.getElementById('mov-nivel-section').style.display = 'block';
+}
+
+function selMovNivel(nivel, btn) {
+  movNivelSel = nivel; movPosSelId = null;
+  document.querySelectorAll('#mov-nivel-btns .mov-rack-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Mostrar posiciones de ese nivel
+  const posNivel = movPosLibresCache.filter(p => p.nivel === nivel);
+  const list = document.getElementById('mov-pos-list');
+  list.innerHTML = '';
+  posNivel.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'mov-pos-opt';
+    div.textContent = p.posicion; // Solo el número, ej: "05"
+    div.title = `${p.rack}-${p.nivel}-${p.posicion}`;
+    div.onclick = () => {
+      document.querySelectorAll('.mov-pos-opt').forEach(el => el.classList.remove('selected'));
+      div.classList.add('selected');
+      movPosSelId = p.id;
+      const codigo = `${p.rack}-${p.nivel}-${p.posicion}`;
+      const badge = document.getElementById('mov-badge-destino');
+      badge.textContent = codigo;
+      badge.style.color = '#00b140';
+      badge.style.borderColor = '#00b140';
+      badge.style.borderStyle = 'solid';
+      const btnC = document.getElementById('mov-btn-confirmar');
+      btnC.disabled = false; btnC.style.opacity = '1';
+    };
+    list.appendChild(div);
+  });
+  document.getElementById('mov-pos-section').style.display = 'block';
+  document.getElementById('mov-badge-destino').textContent = `${movRackSel}-${nivel}-?`;
+  document.getElementById('mov-badge-destino').style.color = '#ff9800';
+  document.getElementById('mov-badge-destino').style.borderColor = '#ff9800';
+  document.getElementById('mov-badge-destino').style.borderStyle = 'dashed';
+}
+
+async function confirmarMovMobile() {
+  if (!movInvId || !movPosSelId) return;
+  const btn = document.getElementById('mov-btn-confirmar');
+  btn.disabled = true; btn.textContent = 'Moviendo...'; btn.style.opacity = '.7';
+  const msg = document.getElementById('mov-msg');
+  try {
+    const r = await fetch('/api/mover_posicion', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({inv_id: movInvId, nueva_posicion_id: movPosSelId})
+    });
+    const d = await r.json();
+    msg.style.display = 'block';
+    if (d.ok) {
+      msg.style.background = '#e8f5e9'; msg.style.border = '1px solid var(--verde)'; msg.style.color = '#1b5e20';
+      msg.textContent = '✓ Movido a ' + d.nueva_ubicacion;
+      btn.textContent = '✓ Listo';
+      setTimeout(() => { cerrarMovSheet(); cargarConsulta(consRackActual); }, 1200);
+    } else {
+      msg.style.background = '#ffebee'; msg.style.border = '1px solid var(--naranja)'; msg.style.color = '#b71c1c';
+      msg.textContent = '✗ ' + (d.error || 'Error');
+      btn.disabled = false; btn.style.opacity = '1'; btn.textContent = 'Confirmar traslado';
+    }
+  } catch(e) {
+    msg.style.display = 'block'; msg.textContent = '✗ Error de conexión';
+    btn.disabled = false; btn.style.opacity = '1'; btn.textContent = 'Confirmar traslado';
+  }
+}
+
+let refs = [], racks_libres = {}, racksDataCompleto = [];
+let estado = { refId:null, refNombre:'', upE:1, unidades:0, estibas:0, sobrante:0, incluirSobrante:false, estibas_data:[], rack:null, ubicaciones:{} };
+let posicionesLibresRack = [], dragChip = null;
+
+async function init() {
+  const r = await fetch('/api/referencias');
+  refs = await r.json();
+  await cargarRacks();
+  // Cargar estado racks para mostrar ocupadas
+  const r2 = await fetch('/api/estado_racks');
+  racksDataCompleto = await r2.json();
+}
+
+async function cargarRacks() {
+  const r = await fetch('/api/posiciones_libres');
+  const d = await r.json();
+  racks_libres = d.por_rack || {};
+}
+
+// ── PASO 1: REFERENCIA ──
+function mostrarTodas() {
+  const dd = document.getElementById('ref-dropdown');
+  const q = document.getElementById('ref-search').value;
+  renderDropdown(q ? refs.filter(r => r.nombre.toLowerCase().includes(q.toLowerCase())) : refs);
+}
+
+function filtrarRefs(q) {
+  renderDropdown(q ? refs.filter(r => r.nombre.toLowerCase().includes(q.toLowerCase())) : refs);
+}
+
+function renderDropdown(lista) {
+  const dd = document.getElementById('ref-dropdown');
+  if (!lista.length) { dd.classList.remove('show'); return; }
+  dd.innerHTML = lista.map(r =>
+    `<div class="ref-option" onclick="selRef(${r.id})">
+      <div>${r.nombre}</div>
+      <div class="sub">${r.unidades_por_estiba} u/estiba · ${r.peso_unidad} kg/u</div>
+    </div>`).join('');
+  dd.classList.add('show');
+}
+
+function toggleLista() {
+  const dd = document.getElementById('ref-dropdown');
+  if (dd.classList.contains('show')) { dd.classList.remove('show'); return; }
+  mostrarTodas();
+}
+
+function selRef(id) {
+  const ref = refs.find(r => r.id == id);
+  if (!ref) return;
+  estado.refId = ref.id; estado.refNombre = ref.nombre; estado.upE = ref.unidades_por_estiba;
+  document.getElementById('ref-search').value = '';
+  document.getElementById('ref-dropdown').classList.remove('show');
+  document.getElementById('ref-sel-badge').style.display = 'block';
+  document.getElementById('ref-sel-nombre').textContent = ref.nombre;
+  document.getElementById('ref-sel-info').textContent = `${ref.unidades_por_estiba} u/estiba · ${ref.peso_unidad} kg/u`;
+  calcEstibas();
+}
+
+function limpiarRef() {
+  estado.refId = null;
+  document.getElementById('ref-search').value = '';
+  document.getElementById('ref-sel-badge').style.display = 'none';
+  document.getElementById('resumen-card').style.display = 'none';
+  document.getElementById('btn-p2').disabled = true;
+}
+
+function calcEstibas() {
+  const uni = parseInt(document.getElementById('unidades').value) || 0;
+  estado.unidades = uni;
+  if (!estado.refId || uni < 1) {
+    document.getElementById('resumen-card').style.display = 'none';
+    document.getElementById('btn-p2').disabled = true;
+    document.getElementById('alerta-calc').style.display = 'none';
+    return;
+  }
+  const completas = Math.floor(uni / estado.upE);
+  const sobrante = uni % estado.upE;
+  estado.estibas = completas; estado.sobrante = sobrante;
+  document.getElementById('alerta-calc').style.display = 'flex';
+  document.getElementById('alerta-calc-txt').innerHTML = `<strong>${uni}</strong> ÷ <strong>${estado.upE}</strong> u/estiba = <strong>${completas}</strong> estibas completas`;
+  if (sobrante > 0) {
+    document.getElementById('alerta-sobrante').classList.add('show');
+    document.getElementById('alerta-sobrante-txt').textContent = `Sobran ${sobrante} unidades que no completan estiba.`;
+    document.getElementById('sobrante-note').style.display = 'block';
+    document.getElementById('sobrante-note').textContent = `(${sobrante} unidades sobrantes)`;
+  } else {
+    document.getElementById('alerta-sobrante').classList.remove('show');
+    document.getElementById('sobrante-note').style.display = 'none';
+  }
+  document.getElementById('estibas-num').textContent = completas;
+  // Permite continuar si hay estibas completas O si hay sobrante (entrada parcial)
+  document.getElementById('resumen-card').style.display = (completas > 0 || sobrante > 0) ? 'block' : 'none';
+  document.getElementById('btn-p2').disabled = (completas < 1 && sobrante < 1) || !estado.refId;
+}
+
+function irPaso2() {
+  // Si no hay estibas completas pero hay sobrante, activarlo automáticamente
+  if (estado.estibas === 0 && estado.sobrante > 0) {
+    estado.incluirSobrante = true;
+  }
+  construirEstibasGrid(); irSec(2);
+}
+
+// ── PASO 2: LOTES ──
+function construirEstibasGrid() {
+  const grid = document.getElementById('estibas-grid');
+  grid.innerHTML = '';
+  estado.estibas_data = [];
+  for (let i = 1; i <= estado.estibas; i++) {
+    estado.estibas_data.push({ num:i, unidades:estado.upE, lotes:[{lote:'',cantidad:estado.upE}], sobrante:false });
+    grid.appendChild(mkEstibaCard(i, estado.upE, false));
+  }
+  if (estado.sobrante > 0) {
+    const soloSobrante = estado.estibas === 0;
+    const numSob = estado.estibas + 1;
+    const sobCard = document.createElement('div');
+    sobCard.className = 'sobrante-card';
+    sobCard.id = 'sobrante-card';
+    if (soloSobrante) {
+      // Solo hay unidades sueltas, no hay estibas completas
+      sobCard.innerHTML = `<div class="sobrante-title">Entrada parcial: ${estado.sobrante} unidades</div>
+        <p style="font-size:.82rem;color:#795548;margin-bottom:10px">No completan una estiba. Se ubicarán en una posición como estiba incompleta.</p>
+        <div id="sob-lote-wrap" style="display:block;margin-top:10px"></div>`;
+      grid.appendChild(sobCard);
+      // Agregar data y card de lote automáticamente
+      estado.estibas_data.push({num:numSob,unidades:estado.sobrante,lotes:[{lote:'',cantidad:estado.sobrante}],sobrante:true});
+      const wrap = sobCard.querySelector('#sob-lote-wrap');
+      wrap.appendChild(mkEstibaCard(numSob, estado.sobrante, true));
+    } else {
+      sobCard.innerHTML = `<div class="sobrante-title">Sobrante: ${estado.sobrante} unidades</div>
+        <p style="font-size:.82rem;color:#795548;margin-bottom:10px">¿Ubicas estas ${estado.sobrante} unidades en una posición adicional?</p>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary btn-sm" id="btn-sob-no" onclick="toggleSob(false)" style="flex:1">No</button>
+          <button class="btn btn-warn btn-sm" id="btn-sob-si" onclick="toggleSob(true)" style="flex:1">Sí, agregar</button>
+        </div>
+        <div id="sob-lote-wrap" style="display:none;margin-top:10px"></div>`;
+      grid.appendChild(sobCard);
+    }
+  }
+}
+
+function mkEstibaCard(num, unidades, esSob) {
+  const div = document.createElement('div');
+  div.className = 'estiba-card';
+  div.innerHTML = `
+    <div class="estiba-header">
+      <span class="estiba-num" style="color:${esSob?'var(--naranja)':'var(--azul)'}">Estiba ${num}${esSob?' (sobrante)':''}</span>
+      <span style="font-size:.75rem;color:var(--muted)">${unidades} u</span>
+    </div>
+    <div id="lotes-${num}${esSob?'-sob':''}">
+      <div class="lote-row">
+        <input type="text" placeholder="Núm. lote">
+        <input type="number" value="${unidades}" min="1">
+      </div>
+    </div>
+    <button class="btn-add-lote" onclick="addLote(${num},'${esSob}')">+ Otro lote en esta estiba</button>`;
+  return div;
+}
+
+function addLote(num, esSob) {
+  const es = esSob==='true'||esSob===true;
+  const lista = document.getElementById(`lotes-${num}${es?'-sob':''}`);
+  const row = document.createElement('div'); row.className = 'lote-row';
+  // Sin índice fijo — confirmarEntrada lee del DOM directamente
+  row.innerHTML = `<input type="text" placeholder="Núm. lote">
+    <input type="number" value="0" min="0">
+    <button class="btn-del" onclick="this.parentElement.remove()">×</button>`;
+  lista.appendChild(row);
+}
+
+function updLote(num, esSob, idx, campo, valor) {
+  const es = esSob==='true'||esSob===true;
+  const data = es ? estado.estibas_data.find(e=>e.sobrante) : estado.estibas_data.find(e=>e.num===num);
+  if (!data) return;
+  if (!data.lotes[idx]) data.lotes[idx]={lote:'',cantidad:0};
+  data.lotes[idx][campo] = campo==='cantidad' ? parseInt(valor)||0 : valor;
+}
+
+function toggleSob(incluir) {
+  estado.incluirSobrante = incluir;
+  const wrap = document.getElementById('sob-lote-wrap');
+  wrap.style.display = incluir ? 'block' : 'none';
+  if (incluir && !estado.estibas_data.find(e=>e.sobrante)) {
+    const numSob = estado.estibas+1;
+    estado.estibas_data.push({num:numSob,unidades:estado.sobrante,lotes:[{lote:'',cantidad:estado.sobrante}],sobrante:true});
+    wrap.appendChild(mkEstibaCard(numSob, estado.sobrante, true));
+  } else if (!incluir) {
+    estado.estibas_data = estado.estibas_data.filter(e=>!e.sobrante);
+    wrap.innerHTML='';
+  }
+}
+
+// ── PASO 3: RACK ──
+async function irPaso3() {
+  await cargarRacks();
+  const r2 = await fetch('/api/estado_racks');
+  racksDataCompleto = await r2.json();
+  renderRackSel(); irSec(3);
+}
+
+function renderRackSel() {
+  const sel = document.getElementById('rack-selector'); sel.innerHTML='';
+  ['J','K','L','M'].forEach(rack => {
+    const libres = racks_libres[rack]||0;
+    const div = document.createElement('div');
+    div.className = 'rack-btn-sel'+(estado.rack===rack?' active':'');
+    div.innerHTML = `<div class="rn">Rack ${rack}</div><div class="rl">${libres} libres</div>`;
+    div.onclick = () => selRack(rack, div);
+    sel.appendChild(div);
+  });
+}
+
+async function selRack(rack, el) {
+  estado.rack=rack; estado.ubicaciones={}; dragChip=null;
+  document.querySelectorAll('.rack-btn-sel').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  const r = await fetch(`/api/posiciones_libres?rack=${rack}`);
+  const d = await r.json();
+  posicionesLibresRack = d.posiciones||[];
+  document.getElementById('rack-visual-section').style.display='block';
+  document.getElementById('rack-visual-title').textContent=`Rack ${rack} — Ubica las estibas`;
+  renderPool(); renderRackSVG(); verificar();
+}
+
+// ── CHIPS DE ESTIBAS (DRAG) ──
+function renderPool() {
+  const pool = document.getElementById('estibas-pool'); pool.innerHTML='';
+  const total = estado.estibas+(estado.incluirSobrante?1:0);
+  for (let i=1;i<=total;i++) {
+    const esSob = estado.incluirSobrante && i===estado.estibas+1;
+    const chip = document.createElement('div');
+    chip.className = `estiba-chip${esSob?' sobrante':''}${estado.ubicaciones[i]?' ubicada':''}`;
+    chip.id=`chip-${i}`; chip.textContent=`E${i}${esSob?' (sob)':''}`;
+    chip.setAttribute('draggable','true');
+    chip.dataset.num = i;
+    // Desktop drag
+    chip.setAttribute('draggable','true');
+    chip.addEventListener('dragstart', e => { if(estado.ubicaciones[i]) {e.preventDefault();return;} dragChip=i; chip.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
+    chip.addEventListener('dragend', () => chip.classList.remove('dragging'));
+    // Touch drag mejorado
+    chip.addEventListener('touchstart', e => { if(estado.ubicaciones[i]) return; dragChip=i; }, {passive:true});
+    chip.addEventListener('touchend', e => {
+      const t = e.changedTouches[0];
+      const el = document.elementFromPoint(t.clientX, t.clientY);
+      if (el && el.dataset && el.dataset.posid) soltarEnPos(el);
+    });
+    // Clic tap-tap: seleccionar chip
+    chip.addEventListener('click', () => {
+      if(estado.ubicaciones[i]) return;
+      dragChip=i;
+      document.querySelectorAll('.estiba-chip').forEach(c=>{c.style.outline='none';c.style.transform='scale(1)';});
+      chip.style.outline='3px solid var(--amarillo)';
+      chip.style.transform='scale(1.1)';
+      document.getElementById('ubicacion-status').innerHTML=
+        '<strong style="color:var(--azul)">E'+i+' seleccionada</strong> — toca una celda libre del rack';
+    });
+    pool.appendChild(chip);
+  }
+}
+
+// ── ESTRUCTURA RACKS ──
+const ESTRUCTURA_MOV = {
+  'J':{'N7':['01','02','03','04','05','06','07','08'],'N6':['01','02','03','04','05','06','07','08','09','10','11','12'],'N5':['01','02','03','04','05','06','07','08','09','10','11','12'],'N4':['01','02','03','04','05','06','07','08','09','10','11','12'],'N3':['01','02','03','04','05','06','07','08','09','10','11','12'],'N2':['01','02','03','04','05','06','07','08','09','10','11','12'],'N1':['01','02','03','04','05','06','07','08','09','10','11','12']},
+  'K':{'N7':['01','02','03','04','05','06','07','08'],'N6':['01','02','03','04','05','06','07','08','09','10','11','12'],'N5':['01','02','03','04','05','06','07','08','09','10','11','12'],'N4':['01','02','03','04','07','08','09','10','11','12'],'N3':['01','02','03','04','07','08','09','10','11','12'],'N2':['01','02','03','04','07','08','09','10','11','12'],'N1':['01','02','03','04','07','08','09','10','11','12']},
+  'L':{'N7':['01','02','03','04','05','06','07','08'],'N6':['01','02','03','04','05','06','07','08','09','10','11','12'],'N5':['01','02','03','04','05','06','07','08','09','10','11','12'],'N4':['01','02','03','04','07','08','09','10','11','12'],'N3':['01','02','03','04','07','08','09','10','11','12'],'N2':['01','02','03','04','07','08','09','10','11','12'],'N1':['01','02','03','04','07','08','09','10','11','12']},
+  'M':{'N7':['01','02','03','04','05','06','07','08'],'N6':['01','02','03','04','05','06','07','08','09','10','11','12'],'N5':['01','02','03','04','05','06','07','08','09','10','11','12'],'N4':['01','02','03','04','07','08','09','10','11','12'],'N3':['01','02','03','04','07','08','09','10','11','12'],'N2':['01','02','03','04','07','08','09','10','11','12'],'N1':['01','02','03','04','07','08','09','10','11','12']}
+};
+const NIVELES_MOV=['N7','N6','N5','N4','N3','N2','N1'];
+const MODULOS_MOV=[['01','02'],['03','04'],['05','06'],['07','08'],['09','10'],['11','12']];
+const CW=44,CH=28,CLW=5,VH=4,PL=28,PT=20;
+
+function renderRackSVG() {
+  const rack=estado.rack;
+  const struct=ESTRUCTURA_MOV[rack]||{};
+  const SW=PL+CLW+MODULOS_MOV.length*(2*CW+CLW)+10;
+  const SH=PT+NIVELES_MOV.length*(CH+VH)+16;
+  const svg=document.getElementById('rack-svg');
+  svg.setAttribute('viewBox',`0 0 ${SW} ${SH}`);
+  svg.setAttribute('width','100%');svg.innerHTML='';
+  const refColors={};
+  const bg=mkEl('rect');bg.setAttribute('width',SW);bg.setAttribute('height',SH);bg.setAttribute('fill','#1a1a2e');bg.setAttribute('rx','8');svg.appendChild(bg);
+
+  MODULOS_MOV.forEach((mod,mi)=>{
+    const x0=PL+CLW+mi*(2*CW+CLW);
+    const tl=mkEl('text');tl.setAttribute('x',x0+CW);tl.setAttribute('y',PT-6);
+    tl.setAttribute('text-anchor','middle');tl.setAttribute('fill','#E65100');
+    tl.setAttribute('font-size','9');tl.setAttribute('font-weight','bold');
+    tl.textContent='M'+(mi+1);svg.appendChild(tl);
+  });
+
+  NIVELES_MOV.forEach((nivel,ni)=>{
+    const activasNivel=struct[nivel]||[];
+    const y0=PT+ni*(CH+VH);
+    const tl=mkEl('text');tl.setAttribute('x',PL-4);tl.setAttribute('y',y0+CH/2+1);
+    tl.setAttribute('text-anchor','end');tl.setAttribute('dominant-baseline','central');
+    tl.setAttribute('fill','#90caf9');tl.setAttribute('font-size','9');tl.setAttribute('font-weight','bold');
+    tl.textContent=nivel;svg.appendChild(tl);
+
+    MODULOS_MOV.forEach((mod,mi)=>{
+      const x0=PL+CLW+mi*(2*CW+CLW);
+      const colL=mkEl('rect');colL.setAttribute('x',x0-CLW);colL.setAttribute('y',y0);
+      colL.setAttribute('width',CLW);colL.setAttribute('height',CH+VH);colL.setAttribute('fill','#1565C0');svg.appendChild(colL);
+
+      mod.forEach((pos,pi)=>{
+        const cx=x0+pi*CW;
+        const activa=activasNivel.includes(pos);
+        const rect=mkEl('rect');rect.setAttribute('x',cx+1);rect.setAttribute('y',y0);
+        rect.setAttribute('width',CW-2);rect.setAttribute('height',CH);rect.setAttribute('rx','3');
+
+        if(!activa){
+          rect.setAttribute('fill','#0d0d1a');svg.appendChild(rect);
+        } else {
+          const posExist=racksDataCompleto.find(p=>p.rack===rack&&p.nivel===nivel&&p.posicion===pos&&p.inv_id);
+          const numEst=Object.keys(estado.ubicaciones).find(en=>{
+            const u=estado.ubicaciones[en];return u&&u.nivel===nivel&&u.posicion===pos;
+          });
+          if(numEst){
+            const esSob=estado.incluirSobrante&&parseInt(numEst)===estado.estibas+1;
+            rect.setAttribute('fill',esSob?'#fe5000':'#00b140');
+            rect.setAttribute('stroke','#fff');rect.setAttribute('stroke-width','1.5');
+            svg.appendChild(rect);
+            const txt=mkEl('text');txt.setAttribute('x',cx+CW/2);txt.setAttribute('y',y0+CH/2);
+            txt.setAttribute('text-anchor','middle');txt.setAttribute('dominant-baseline','central');
+            txt.setAttribute('fill','#fff');txt.setAttribute('font-size','10');txt.setAttribute('font-weight','bold');
+            txt.setAttribute('pointer-events','none');txt.textContent='E'+numEst;svg.appendChild(txt);
+          } else if(posExist){
+            rect.setAttribute('fill',posExist.color||'#888');rect.setAttribute('opacity','0.8');
+            refColors[posExist.referencia]=posExist.color;svg.appendChild(rect);
+            const txt=mkEl('text');txt.setAttribute('x',cx+CW/2);txt.setAttribute('y',y0+CH/2);
+            txt.setAttribute('text-anchor','middle');txt.setAttribute('dominant-baseline','central');
+            txt.setAttribute('fill','#fff');txt.setAttribute('font-size','8');
+            txt.setAttribute('pointer-events','none');txt.textContent=pos;svg.appendChild(txt);
+          } else {
+            rect.setAttribute('fill','#2a2a3e');rect.setAttribute('class','drop-target');
+            const posL=posicionesLibresRack.find(pl=>pl.nivel===nivel&&pl.posicion===pos);
+            if(posL){
+              rect.dataset.posid=posL.id;rect.dataset.nivel=nivel;rect.dataset.pos=pos;
+              rect.addEventListener('dragover',e=>{e.preventDefault();rect.setAttribute('fill','#eee413');});
+              rect.addEventListener('dragleave',()=>rect.setAttribute('fill','#2a2a3e'));
+              rect.addEventListener('drop',e=>{e.preventDefault();rect.setAttribute('fill','#2a2a3e');soltarEnPos(rect,posL,nivel,pos);});
+              rect.addEventListener('click',()=>{if(dragChip!=null) soltarEnPos(rect,posL,nivel,pos);});
+              rect.style.cursor='crosshair';
+            }
+            svg.appendChild(rect);
+            const txt=mkEl('text');txt.setAttribute('x',cx+CW/2);txt.setAttribute('y',y0+CH/2);
+            txt.setAttribute('text-anchor','middle');txt.setAttribute('dominant-baseline','central');
+            txt.setAttribute('fill','#3a4a6a');txt.setAttribute('font-size','8');
+            txt.setAttribute('pointer-events','none');txt.textContent=pos;svg.appendChild(txt);
+          }
+        }
+      });
+      if(mi===MODULOS_MOV.length-1){
+        const colR=mkEl('rect');colR.setAttribute('x',x0+2*CW);colR.setAttribute('y',y0);
+        colR.setAttribute('width',CLW);colR.setAttribute('height',CH+VH);colR.setAttribute('fill','#1565C0');svg.appendChild(colR);
+      }
+    });
+    const viga=mkEl('rect');viga.setAttribute('x',PL);viga.setAttribute('y',y0+CH);
+    viga.setAttribute('width',MODULOS_MOV.length*(2*CW+CLW)+CLW);viga.setAttribute('height',VH);
+    viga.setAttribute('fill','#E65100');svg.appendChild(viga);
+  });
+
+  const ley=document.getElementById('leyenda-rack');
+  ley.querySelectorAll('.ley-ref').forEach(e=>e.remove());
+  Object.entries(refColors).forEach(([nombre,color])=>{
+    const d=document.createElement('div');d.className='ley-item ley-ref';
+    d.innerHTML=`<div class="ley-dot" style="background:${color}"></div> ${nombre.substring(0,22)}`;
+    ley.appendChild(d);
+  });
+}
+function mkEl(tag){return document.createElementNS('http://www.w3.org/2000/svg',tag);}
+
+function soltarEnPos(rect, posL, nivel, pos) {
+  if (dragChip==null) return;
+  if (!posL) {
+    posL = posicionesLibresRack.find(p=>p.nivel===rect.dataset.nivel&&p.posicion===rect.dataset.pos);
+    nivel=rect.dataset.nivel; pos=rect.dataset.pos;
+  }
+  if (!posL) return;
+  estado.ubicaciones[dragChip]={posicion_id:posL.id,nivel:nivel,posicion:pos};
+  const chip=document.getElementById(`chip-${dragChip}`);
+  if(chip){chip.classList.add('ubicada');chip.setAttribute('draggable','false');}
+  const codigo=`${estado.rack}-${nivel}-${pos}`;
+  document.getElementById('ubicacion-status').innerHTML=`<span style="color:var(--verde)">✓ E${dragChip} → ${codigo}</span> — selecciona la siguiente estiba`;
+  dragChip=null; renderRackSVG(); verificar();
+}
+
+function ubicarAleatorio() {
+  const usadas=new Set(Object.values(estado.ubicaciones).map(u=>u.posicion_id));
+  const disp=posicionesLibresRack.filter(p=>!usadas.has(p.id));
+  // Ordenar por nivel descendente y posición para agrupar
+  disp.sort((a,b)=>b.nivel.localeCompare(a.nivel)||a.posicion.localeCompare(b.posicion));
+  const total=estado.estibas+(estado.incluirSobrante?1:0);
+  let idx=0;
+  for(let i=1;i<=total;i++){
+    if(estado.ubicaciones[i]) continue;
+    if(idx>=disp.length) break;
+    const pos=disp[idx++];
+    estado.ubicaciones[i]={posicion_id:pos.id,nivel:pos.nivel,posicion:pos.posicion};
+    const chip=document.getElementById(`chip-${i}`);
+    if(chip){chip.classList.add('ubicada');chip.setAttribute('draggable','false');}
+  }
+  dragChip=null; renderPool(); renderRackSVG(); verificar();
+  document.getElementById('ubicacion-status').textContent='Estibas ubicadas agrupadas automáticamente.';
+}
+
+function limpiarUbicacion() {
+  estado.ubicaciones={}; dragChip=null; renderPool(); renderRackSVG(); verificar();
+  document.getElementById('ubicacion-status').textContent='';
+}
+
+function verificar() {
+  const total=estado.estibas+(estado.incluirSobrante?1:0);
+  const ub=Object.keys(estado.ubicaciones).length;
+  document.getElementById('btn-p4').disabled=ub<total;
+  document.getElementById('ubicacion-status').textContent=`${ub} de ${total} estibas ubicadas`;
+}
+
+// ── PASO 4 ──
+function irPaso4() {
+  const total=estado.estibas+(estado.incluirSobrante?1:0);
+  const lotesTxt=estado.estibas_data.map(e=>{
+    const ls=e.lotes.filter(l=>l.lote).map(l=>`${l.lote}(${l.cantidad}u)`).join('+');
+    return `E${e.num}: ${ls||'sin lote'}`;
+  }).join(' | ');
+  document.getElementById('confirm-table').innerHTML=`
+    <tr><td>Referencia</td><td>${estado.refNombre}</td></tr>
+    <tr><td>Unidades</td><td>${estado.unidades}</td></tr>
+    <tr><td>Estibas</td><td>${total}</td></tr>
+    <tr><td>Rack</td><td>${estado.rack}</td></tr>
+    <tr><td>Lotes</td><td style="font-size:.73rem;word-break:break-word">${lotesTxt}</td></tr>`;
+  irSec(4);
+}
+
+async function confirmarEntrada() {
+  const btn=document.getElementById('btn-guardar');
+  btn.disabled=true;
+  document.getElementById('confirm-btns').style.display='none';
+
+  // Leer lotes DIRECTO del DOM
+  const posiciones_estibas=Object.entries(estado.ubicaciones).map(([num,ubi])=>{
+    const numInt = parseInt(num);
+    const d = estado.estibas_data.find(e=>e.num===numInt);
+    const esSob = d ? d.sobrante : false;
+    const loteContainer = document.getElementById(`lotes-${numInt}${esSob?'-sob':''}`);
+    let lotesDOM = [];
+    if(loteContainer){
+      loteContainer.querySelectorAll('.lote-row').forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        const loteVal = inputs[0]?inputs[0].value.trim():'';
+        const cantVal = inputs[1]?parseInt(inputs[1].value)||0:0;
+        if(loteVal) lotesDOM.push({lote:loteVal, cantidad:cantVal});
+      });
+    } else if(d){
+      lotesDOM = d.lotes.filter(l=>l.lote);
+    }
+    return {posicion_id:ubi.posicion_id, lotes:lotesDOM, sobrante:esSob};
+  });
+
+  const payload={referencia_id:estado.refId,unidades:estado.unidades,estibas:Object.keys(estado.ubicaciones).length,rack:estado.rack,posiciones_estibas};
+  mostrarEnvio('enviando', 1);
+  await enviarPayload(payload);
+}
+
+let payloadPendiente = null;
+
+async function enviarPayload(payload, intento=1) {
+  payloadPendiente = payload;
+  mostrarEnvio('enviando', intento);
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(()=>controller.abort(), 12000);
+    const resp = await fetch('/api/registrar_entrada_v2',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload),
+      signal: controller.signal
+    });
+    clearTimeout(timer);
+    if(resp.ok){
+      const d = await resp.json();
+      payloadPendiente = null;
+      mostrarEnvio('ok');
+      document.getElementById('alerta-exito').classList.add('show');
+      document.getElementById('btn-nueva').style.display='block';
+      if(d.advertencia) mostrarEnvioWarn(d.advertencia);
+    } else {
+      let errMsg = `HTTP ${resp.status}`;
+      try {
+        const ed=await resp.json();
+        errMsg = ed.error||errMsg;
+        if(ed.tipo) errMsg = `[${ed.tipo}] ${errMsg}`;
+        if(ed.detalle) errMsg += `\n\nTraceback:\n${ed.detalle}`;
+      } catch(e){}
+      if(intento < 3){
+        mostrarEnvio('reintentando', intento+1);
+        setTimeout(()=>enviarPayload(payload, intento+1), 2500*intento);
+      } else {
+        mostrarEnvio('error', null, `Servidor respondió: ${errMsg}\nIntento: ${intento}/3\nRef: ${estado.refNombre}\nUnidades: ${estado.unidades}`);
+      }
+    }
+  } catch(e){
+    const msg = e.name==='AbortError' ? 'Tiempo de espera agotado (12s)' : `Sin conexión: ${e.message}`;
+    if(intento < 3){
+      mostrarEnvio('reintentando', intento+1);
+      setTimeout(()=>enviarPayload(payload, intento+1), 2500*intento);
+    } else {
+      mostrarEnvio('error', null, `${msg}\nIntento: ${intento}/3\nRef: ${estado.refNombre}\nUnidades: ${estado.unidades}\nFecha: ${new Date().toLocaleString()}`);
+    }
+  }
+}
+
+function reintentarEnvio(){
+  if(!payloadPendiente) return;
+  document.getElementById('envio-error-wrap').style.display='none';
+  enviarPayload(payloadPendiente, 1);
+}
+
+function copiarError(){
+  const txt = document.getElementById('envio-error-txt').textContent;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const btn = event.target;
+    btn.textContent='Copiado!';
+    setTimeout(()=>btn.textContent='Copiar error',2000);
+  }).catch(()=>{
+    document.getElementById('envio-error-txt').select?.();
+    document.execCommand('copy');
+  });
+}
+
+function mostrarEnvio(estado, intento, errorTxt){
+  const wrap = document.getElementById('envio-status');
+  const progWrap = document.getElementById('envio-progress-wrap');
+  const errWrap = document.getElementById('envio-error-wrap');
+  wrap.style.display='block';
+
+  if(estado==='enviando'){
+    progWrap.style.display='block'; errWrap.style.display='none';
+    document.getElementById('envio-label').textContent='Enviando al servidor...';
+    document.getElementById('envio-intento').textContent=intento>1?`Intento ${intento}/3`:'';
+    animarBarra(30);
+  } else if(estado==='reintentando'){
+    progWrap.style.display='block'; errWrap.style.display='none';
+    document.getElementById('envio-label').textContent=`Reintentando (${intento-1}/3)...`;
+    document.getElementById('envio-intento').textContent='';
+    animarBarra(60);
+  } else if(estado==='ok'){
+    progWrap.style.display='block'; errWrap.style.display='none';
+    // Primero llenar al 100%, luego cambiar a verde
+    if(barInterval) clearInterval(barInterval);
+    const bar = document.getElementById('envio-bar');
+    bar.style.transition='width .3s ease';
+    bar.style.width='100%';
+    setTimeout(()=>{
+      document.getElementById('envio-label').textContent='Guardado correctamente';
+      document.getElementById('envio-label').style.color='#00b140';
+      document.getElementById('envio-progress-wrap').style.background='#e8f5e9';
+      bar.style.background='#00b140';
+    }, 320);
+    document.getElementById('envio-intento').textContent='';
+  } else if(estado==='error'){
+    progWrap.style.display='none'; errWrap.style.display='block';
+    document.getElementById('envio-error-txt').textContent=errorTxt||'Error desconocido';
+    // Restaurar botón por si quiere corregir algo
+    const btn=document.getElementById('btn-guardar');
+    btn.disabled=false;
+    document.getElementById('confirm-btns').style.display='flex';
+  }
+}
+
+function mostrarEnvioWarn(msg){
+  const label = document.getElementById('envio-label');
+  if(label){ label.textContent='Guardado con advertencia: '+msg; label.style.color='#ff9800'; }
+}
+
+let barInterval=null;
+function animarBarra(target){
+  const bar=document.getElementById('envio-bar');
+  if(!bar) return;
+  if(barInterval) clearInterval(barInterval);
+  let cur=parseInt(bar.style.width)||0;
+  barInterval=setInterval(()=>{
+    if(cur>=target){clearInterval(barInterval);return;}
+    cur=Math.min(cur+2,target);
+    bar.style.width=cur+'%';
+  },30);
+}
+
+
+
+function irSec(n){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec'+n).classList.add('active');
+  document.querySelectorAll('.step').forEach((s,i)=>{s.className='step'+(i<n-1?' done':i===n-1?' active':'');});
+  window.scrollTo(0,0);
+}
+
+function nueva(){
+  estado={refId:null,refNombre:'',upE:1,unidades:0,estibas:0,sobrante:0,incluirSobrante:false,estibas_data:[],rack:null,ubicaciones:{}};
+  payloadPendiente=null;
+  dragChip=null;
+  document.getElementById('ref-search').value='';
+  document.getElementById('ref-sel-badge').style.display='none';
+  document.getElementById('unidades').value='';
+  document.getElementById('resumen-card').style.display='none';
+  document.getElementById('alerta-calc').style.display='none';
+  document.getElementById('alerta-sobrante').classList.remove('show');
+  document.getElementById('alerta-exito').classList.remove('show');
+  document.getElementById('confirm-btns').style.display='flex';
+  document.getElementById('btn-nueva').style.display='none';
+  document.getElementById('btn-guardar').disabled=false;
+  document.getElementById('btn-p2').disabled=true;
+  document.getElementById('rack-visual-section').style.display='none';
+  document.getElementById('envio-status').style.display='none';
+  document.getElementById('envio-progress-wrap').style.display='none';
+  document.getElementById('envio-error-wrap').style.display='none';
+  document.getElementById('envio-bar').style.width='0%';
+  document.getElementById('envio-label').style.color='#0782c2';
+  document.getElementById('envio-progress-wrap').style.background='#e8f4fd';
+  document.getElementById('envio-bar').style.background='#0782c2';
+  irSec(1);
+}
+
+window.addEventListener('load',()=>{
+  // Limpiar cola vieja al cargar
+  let cola=JSON.parse(localStorage.getItem('cola_wms')||'[]');
+  if(cola.length>0){
+    const ahora=Date.now();
+    cola=cola.filter(e=>ahora-(e.timestamp||0)<3600000);
+    localStorage.setItem('cola_wms',JSON.stringify(cola));
+  }
+});
+document.addEventListener('click',e=>{if(!e.target.closest('.ref-wrap')) document.getElementById('ref-dropdown').classList.remove('show');});
+document.getElementById('mov-overlay').addEventListener('click', function(e){ if(e.target===this) cerrarMovSheet(); });
+document.getElementById('sal-overlay').addEventListener('click', function(e){ if(e.target===this) cerrarSalSheet(); });
+init();
+</script>
+</body>
+</html>
