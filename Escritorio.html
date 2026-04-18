@@ -278,6 +278,7 @@ const ESTRUCTURA = {
   'M':{'N7':['01','02','03','04','05','06','07','08'],'N6':['01','02','03','04','05','06','07','08','09','10','11','12'],'N5':['01','02','03','04','05','06','07','08','09','10','11','12'],'N4':['01','02','03','04','07','08','09','10','11','12'],'N3':['01','02','03','04','07','08','09','10','11','12'],'N2':['01','02','03','04','07','08','09','10','11','12'],'N1':['01','02','03','04','07','08','09','10','11','12']}
 };
 const MODULOS=[['01','02'],['03','04'],['05','06'],['07','08'],['09','10'],['11','12']];
+const MODULOS_K=[['11','12'],['09','10'],['07','08'],['05','06'],['03','04'],['01','02']];
 const NIVELES=['N7','N6','N5','N4','N3','N2','N1'];
 
 let racksData=[], loteBuscado='', rackActivo='J';
@@ -318,19 +319,18 @@ function renderRack(){
   const table=document.createElement('table');
   table.className='rt';
   const refColores={};
+  const MODS = rack==='K' ? MODULOS_K : MODULOS;
 
-  // Header módulos
   // Header módulos con columnas azules laterales
   const thead=table.createTHead();
   const hr=thead.insertRow();
-  // columna label nivel
   const th0=document.createElement('td');hr.appendChild(th0);
-  // col izq primera
   const thColIzq=document.createElement('td');thColIzq.className='col-izq';hr.appendChild(thColIzq);
-  MODULOS.forEach((mod,mi)=>{
+  MODS.forEach((mod,mi)=>{
     const th=document.createElement('td');th.colSpan=2;th.className='ml';
-    th.textContent='M'+(mi+1);hr.appendChild(th);
-    // columna azul derecha de cada módulo
+    // Número de módulo real basado en posiciones
+    const modNum = rack==='K' ? MODULOS.length - mi : mi+1;
+    th.textContent='M'+modNum;hr.appendChild(th);
     const thCS=document.createElement('td');thCS.className='col-der';hr.appendChild(thCS);
   });
 
@@ -338,13 +338,11 @@ function renderRack(){
   NIVELES.forEach(nivel=>{
     const activasNivel=ESTRUCTURA[rack][nivel]||[];
 
-    // Fila de posiciones
     const tr=tbody.insertRow();
     const tdL=tr.insertCell();tdL.className='nl';tdL.textContent=nivel;
-    // col izq
     const tdCI=tr.insertCell();tdCI.className='col-izq';
 
-    MODULOS.forEach((mod,mi)=>{
+    MODS.forEach((mod,mi)=>{
       mod.forEach(pos=>{
         const td=tr.insertCell();
         const codigo=`${rack}-${nivel}-${pos}`;
@@ -383,7 +381,7 @@ function renderRack(){
     const trV=tbody.insertRow();trV.className='viga-row';
     const tdVL=trV.insertCell();tdVL.className='viga-nl';
     const tdVCI=trV.insertCell();tdVCI.className='viga-cell';tdVCI.style.background='#1565C0';
-    MODULOS.forEach((mod,mi)=>{
+    MODS.forEach((mod,mi)=>{
       mod.forEach(()=>{
         const tdV=trV.insertCell();tdV.className='viga-cell';
       });
