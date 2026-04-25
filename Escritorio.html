@@ -105,8 +105,133 @@ table.rt{border-collapse:separate;border-spacing:0;}
 .modal-actions{display:flex;gap:8px;margin-top:14px;}
 .btn-cancel{background:var(--bg);color:var(--text);border:1px solid var(--border);flex:1;padding:9px;border-radius:8px;cursor:pointer;}
 .btn-ok{background:var(--azul);color:#fff;flex:2;padding:9px;border-radius:8px;cursor:pointer;border:none;font-weight:600;}
+/* ── MODAL ALERTAS ── */
+.alertas-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto;}
+.alertas-overlay.show{display:flex;}
+.alertas-modal{background:#fff;border-radius:16px;width:100%;max-width:760px;box-shadow:0 12px 48px rgba(0,0,0,.22);animation:slideDown .22s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+.alertas-header{background:var(--azul);border-radius:16px 16px 0 0;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
+.alertas-header-title{color:#fff;font-weight:700;font-size:1rem;}
+.alertas-close{background:rgba(255,255,255,.2);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.alertas-body{padding:18px 20px;}
+.alertas-resumen{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}
+.ar-card{border-radius:10px;padding:12px 14px;text-align:center;display:flex;flex-direction:column;align-items:center;}
+.ar-card.vencido{background:#ffebee;border:1px solid #ef9a9a;}
+.ar-card.critico{background:#fff3e0;border:1px solid #ffcc80;}
+.ar-card.proximo{background:#fffde7;border:1px solid #fff176;}
+.ar-card.rotacion{background:#f3e5f5;border:1px solid #ce93d8;}
+.ar-num{font-size:1.6rem;font-weight:700;font-family:'IBM Plex Mono',monospace;}
+.ar-card.vencido .ar-num{color:#c62828;}
+.ar-card.critico .ar-num{color:#e65100;}
+.ar-card.proximo .ar-num{color:#f9a825;}
+.ar-card.rotacion .ar-num{color:#6a1b9a;}
+.ar-label{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#555;margin-top:2px;}
+.alertas-seccion{margin-bottom:18px;}
+.alertas-sec-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.alerta-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;margin-bottom:6px;border:1px solid transparent;}
+.alerta-item.vencido{background:#ffebee;border-color:#ef9a9a;}
+.alerta-item.critico{background:#fff3e0;border-color:#ffcc80;}
+.alerta-item.proximo{background:#fffde7;border-color:#fff176;}
+.alerta-item.advertencia{background:#f3e5f5;border-color:#ce93d8;}
+.alerta-item.critico-rot{background:#fce4ec;border-color:#f48fb1;}
+.alerta-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.alerta-ref{font-size:.83rem;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.alerta-ubi{font-family:monospace;font-size:.75rem;background:rgba(0,0,0,.06);padding:2px 7px;border-radius:5px;white-space:nowrap;}
+.alerta-meta{font-size:.72rem;color:#555;white-space:nowrap;}
+.alerta-tag{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap;}
+.alerta-tag.vencido{background:#c62828;color:#fff;}
+.alerta-tag.critico{background:#e65100;color:#fff;}
+.alerta-tag.proximo{background:#f9a825;color:#fff;}
+.alerta-tag.advertencia{background:#7b1fa2;color:#fff;}
+.alerta-tag.critico-rot{background:#ad1457;color:#fff;}
+.alertas-empty{text-align:center;padding:28px;color:var(--muted);font-size:.85rem;}
+.alertas-tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:16px;}
+.alertas-tab{padding:8px 18px;font-size:.82rem;font-weight:600;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:.15s;}
+.alertas-tab.active{color:var(--azul);border-bottom-color:var(--azul);}
+
+/* ── MODAL STOCK ── */
+.stock-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto;}
+.stock-overlay.show{display:flex;}
+.stock-modal{background:#fff;border-radius:16px;width:100%;max-width:860px;box-shadow:0 12px 48px rgba(0,0,0,.22);animation:slideDown .22s ease;}
+.stock-modal-header{background:var(--azul);border-radius:16px 16px 0 0;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
+.stock-modal-body{padding:18px 20px;}
+.stock-toolbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
+.stock-input{flex:1;min-width:180px;padding:8px 12px 8px 34px;border-radius:8px;border:1.5px solid var(--border);font-size:.85rem;outline:none;position:relative;}
+.stock-input:focus{border-color:var(--azul);}
+.stock-input-wrap{position:relative;flex:1;min-width:180px;}
+.stock-input-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;}
+.stock-rack-btns{display:flex;gap:5px;}
+.stock-rack-btn{padding:7px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg);font-size:.78rem;font-weight:700;color:var(--muted);cursor:pointer;transition:.15s;}
+.stock-rack-btn.active{border-color:var(--azul);background:#e8f4fd;color:var(--azul);}
+.stock-sort-sel{padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);font-size:.78rem;background:var(--bg);color:var(--text);cursor:pointer;outline:none;}
+.stock-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.stock-meta-count{font-size:.75rem;color:var(--muted);}
+.stock-table{width:100%;border-collapse:collapse;}
+.stock-table thead th{padding:8px 12px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);background:#f7f9fc;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap;}
+.stock-table tbody tr{border-bottom:1px solid #f0f4f8;cursor:pointer;transition:background .1s;}
+.stock-table tbody tr:hover{background:#f7fbff;}
+.stock-table tbody tr.expanded{background:#f0f7ff;}
+.stock-table td{padding:10px 12px;font-size:.82rem;vertical-align:middle;}
+.stock-ref-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:middle;flex-shrink:0;}
+.stock-ref-name{font-weight:600;}
+.stock-ref-sub{font-size:.72rem;color:var(--muted);}
+.stock-u-big{font-size:1rem;font-weight:800;color:var(--azul);}
+.stock-expand-row{display:none;}
+.stock-expand-row.open{display:table-row;}
+.stock-expand-cell{padding:0 !important;border-bottom:2px solid var(--azul) !important;}
+.stock-expand-inner{background:#f7fbff;padding:12px 16px;}
+.stock-ubic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-top:8px;}
+.stock-ubic-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+.stock-ubic-pos{font-family:monospace;font-size:.8rem;font-weight:700;color:var(--azul);margin-bottom:4px;}
+.stock-ubic-u2{font-size:.85rem;font-weight:700;color:var(--text);}
+.stock-ubic-lote{font-size:.7rem;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.stock-erp-chip{display:inline-block;font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:4px;margin-top:4px;}
+.stock-erp-chip.ok{background:#e8f5e9;color:#1b5e20;}
+.stock-erp-chip.pend{background:#fff3e0;color:#e65100;}
+.stock-empty-msg{text-align:center;padding:40px;color:var(--muted);font-size:.88rem;}
+
+/* ── MODAL TRAZABILIDAD ── */
+.traz-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:600;display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto;}
+.traz-overlay.show{display:flex;}
+.traz-modal{background:#fff;border-radius:16px;width:100%;max-width:900px;box-shadow:0 12px 48px rgba(0,0,0,.22);animation:slideDown .22s ease;}
+.traz-header{background:#1a2a3a;border-radius:16px 16px 0 0;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
+.traz-body{padding:18px 20px;}
+.traz-search-row{display:flex;gap:10px;margin-bottom:18px;}
+.traz-inp{flex:1;padding:10px 14px 10px 36px;border-radius:8px;border:1.5px solid var(--border);font-size:.9rem;outline:none;}
+.traz-inp:focus{border-color:var(--azul);}
+.traz-inp-wrap{position:relative;flex:1;}
+.traz-inp-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;}
+.traz-btn-buscar{padding:10px 20px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:700;cursor:pointer;white-space:nowrap;}
+.traz-btn-buscar:hover{opacity:.88;}
+.traz-section{margin-bottom:20px;}
+.traz-section-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;}
+.traz-badge{display:inline-block;background:var(--azul);color:#fff;border-radius:10px;font-size:.65rem;font-weight:700;padding:2px 7px;}
+.traz-badge.naranja{background:#fe5000;}
+.traz-badge.verde{background:#00b140;}
+.traz-card{border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:8px;background:#fff;}
+.traz-card:hover{background:#f7fbff;}
+.traz-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.traz-card-ref{font-weight:700;font-size:.92rem;color:var(--text);display:flex;align-items:center;gap:6px;}
+.traz-card-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.traz-card-tipo{padding:3px 9px;border-radius:20px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;}
+.traz-tipo-entrada{background:#e8f5e9;color:#1b5e20;}
+.traz-tipo-salida{background:#fde8e8;color:#b71c1c;}
+.traz-tipo-salida_parcial{background:#fff3e0;color:#e65100;}
+.traz-tipo-traslado{background:#e8eaf6;color:#283593;}
+.traz-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px;margin-top:10px;}
+.traz-field{background:#f7f9fc;border-radius:6px;padding:7px 10px;}
+.traz-field-label{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin-bottom:2px;}
+.traz-field-val{font-size:.82rem;font-weight:600;color:var(--text);word-break:break-all;}
+.traz-field-val.mono{font-family:monospace;}
+.traz-field-val.verde{color:#1b5e20;}
+.traz-field-val.naranja{color:#e65100;}
+.traz-field-val.azul{color:var(--azul);}
+.traz-empty{text-align:center;padding:30px;color:var(--muted);font-size:.85rem;}
+.traz-lote-tag{display:inline-block;background:#e8f4fd;color:var(--azul);border-radius:5px;font-family:monospace;font-size:.78rem;font-weight:700;padding:3px 8px;margin-top:2px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.traz-status-en-bodega{display:inline-flex;align-items:center;gap:5px;background:#e8f5e9;color:#1b5e20;border-radius:20px;font-size:.72rem;font-weight:700;padding:4px 10px;}
+.traz-status-salio{display:inline-flex;align-items:center;gap:5px;background:#fde8e8;color:#b71c1c;border-radius:20px;font-size:.72rem;font-weight:700;padding:4px 10px;}
+
 </style>
-</head>
 <body>
 <div class="topbar">
   <div style="display:flex;align-items:center;gap:10px;">
@@ -117,9 +242,27 @@ table.rt{border-collapse:separate;border-spacing:0;}
     </div>
   </div>
   <div class="topbar-actions">
-    <input type="text" id="search-input" placeholder="Buscar lote..." oninput="buscarLote(this.value)">
+    <div style="display:flex;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,.3);">
+      <select id="search-tipo" onchange="limpiarBusqueda()"
+        style="padding:7px 8px;border:none;font-size:12px;background:rgba(255,255,255,.15);color:#fff;outline:none;cursor:pointer;">
+        <option value="lote" style="color:#000">Lote</option>
+        <option value="sku" style="color:#000">SKU/Ref</option>
+        <option value="grupo" style="color:#000">Grupo</option>
+        <option value="marca" style="color:#000">Marca</option>
+      </select>
+      <input type="text" id="search-input" placeholder="Buscar..." oninput="buscarGeneral(this.value)"
+        style="padding:7px 10px;border:none;font-size:13px;width:160px;outline:none;background:rgba(255,255,255,.9);color:#1a2a3a;">
+    </div>
     <button class="btn btn-upload" onclick="showUpload()">Cargar referencias</button>
     <button class="btn btn-yellow" onclick="exportar()">Descargar Excel</button>
+    <a href="/kardex" target="_blank" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Kárdex</a>
+    <button onclick="abrirStock()" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>Stock</button>
+    <button onclick="abrirTrazabilidad()" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Buscar lote</button>
+    <button onclick="abrirAlertas()"  id="btn-alertas" style="position:relative;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Alertas<span id="badge-alertas" style="display:none;position:absolute;top:-5px;right:-5px;background:#fe5000;color:#fff;border-radius:10px;font-size:10px;font-weight:700;padding:2px 6px;min-width:18px;text-align:center;"></span></button>
     <a href="/" style="color:rgba(255,255,255,.8);font-size:.8rem;text-decoration:none">Inicio</a>
   </div>
 </div>
@@ -180,7 +323,12 @@ table.rt{border-collapse:separate;border-spacing:0;}
           oninput="buscarLateralLote(this.value)">
         <div id="buscar-results"><div class="no-res">Escribe un lote para buscar</div></div>
       </div>
-      <div class="tab-content" id="tab-refs"><div id="lista-refs"><div class="no-res">Cargando...</div></div></div>
+      <div class="tab-content" id="tab-refs">
+        <input type="text" placeholder="Buscar por grupo, marca o SKU..."
+          style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;outline:none;margin-bottom:8px;"
+          oninput="cargarRefs(this.value)">
+        <div id="lista-refs"><div class="no-res">Cargando...</div></div>
+      </div>
     </div>
   </div>
 </div>
@@ -188,39 +336,92 @@ table.rt{border-collapse:separate;border-spacing:0;}
 <div class="tooltip" id="tooltip"></div>
 
 <!-- Panel de posición con códigos de barras -->
-<div id="panel-pos" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:flex-start;justify-content:center;overflow-y:auto;padding:24px 16px;">
-  <div style="background:#fff;border-radius:16px;padding:24px;width:420px;max-width:95vw;font-family:monospace;margin:auto;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <div style="font-size:1.1rem;font-weight:700;color:#1a2a3a" id="pp-codigo"></div>
-      <button onclick="cerrarPanel()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#6b7a8d;">×</button>
+<div id="panel-pos" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 16px;">
+  <div style="background:#f4f7fb;border-radius:18px;width:440px;max-width:95vw;margin:auto;overflow:hidden;box-shadow:0 12px 50px rgba(0,0,0,.5);">
+
+    <!-- Header azul oscuro -->
+    <div style="background:linear-gradient(135deg,#0763c2,#0782c2);padding:18px 20px;display:flex;align-items:center;gap:14px;">
+      <div style="background:rgba(255,255,255,.1);border-radius:10px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+      <div style="flex:1;">
+        <div style="font-size:1.2rem;font-weight:800;color:#fff;letter-spacing:.5px;" id="pp-codigo"></div>
+        <div style="font-size:.7rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;">Ubicación de almacén</div>
+      </div>
+      <button onclick="cerrarPanel()" style="background:rgba(255,255,255,.1);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;">×</button>
     </div>
-    <div style="background:#f0f4f8;border-radius:10px;padding:12px;margin-bottom:14px;font-size:.82rem;color:#1a2a3a;line-height:1.7">
-      <div><span style="color:#6b7a8d">Referencia:</span> <strong id="pp-ref"></strong></div>
-      <div><span style="color:#6b7a8d">Lote:</span> <strong id="pp-lote"></strong></div>
-      <div><span style="color:#6b7a8d">Fecha entrada:</span> <span id="pp-fecha"></span></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
-        <span><span style="color:#6b7a8d">Estado ERP:</span> <span id="pp-erp"></span></span>
-        <button id="pp-btn-erp" onclick="marcarERPdesdePanel()"
-          style="padding:4px 12px;font-size:.75rem;border-radius:6px;cursor:pointer;border:1px solid var(--verde);background:#e8f5e9;color:#1b5e20;font-weight:600;transition:.15s;">
-          Marcar ERP
-        </button>
+
+    <!-- Stats bar -->
+    <div style="background:#0763c2;display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid rgba(255,255,255,.15);">
+      <div style="padding:12px 16px;border-right:1px solid rgba(255,255,255,.07);">
+        <div style="font-size:.65rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px;">Referencias</div>
+        <div style="font-size:1.3rem;font-weight:800;color:#fff;" id="pp-stat-refs">—</div>
+      </div>
+      <div style="padding:12px 16px;border-right:1px solid rgba(255,255,255,.07);">
+        <div style="font-size:.65rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px;">Peso total</div>
+        <div style="font-size:1.3rem;font-weight:800;color:#eee413;" id="pp-stat-peso">—</div>
+      </div>
+      <div style="padding:12px 16px;">
+        <div style="font-size:.65rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px;">Fecha entrada</div>
+        <div style="font-size:.8rem;font-weight:700;color:#fff;" id="pp-stat-fecha">—</div>
+        <div style="font-size:.68rem;color:rgba(255,255,255,.55);margin-top:3px;" id="pp-stat-operador"></div>
       </div>
     </div>
-    <!-- Código de barras ubicación -->
-    <div style="background:#fff;border:1px solid #d8e3ef;border-radius:10px;padding:12px;margin-bottom:10px;text-align:center;">
-      <div style="font-size:.72rem;color:#6b7a8d;margin-bottom:6px;font-family:sans-serif;">Código de barras — Ubicación</div>
-      <canvas id="barcode-ubicacion"></canvas>
-      <div style="font-size:.8rem;font-weight:700;color:#0782c2;margin-top:4px" id="pp-ubicacion-txt"></div>
+
+    <!-- Cuerpo blanco -->
+    <div style="background:#f4f7fb;padding:16px;">
+
+      <!-- Capacidad + ERP -->
+      <div style="background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-size:.75rem;color:#6b7a8d;font-weight:600;">Capacidad utilizada</span>
+          <span style="font-size:.78rem;font-weight:700;color:#0782c2;" id="pp-peso-label">—</span>
+        </div>
+        <div style="background:#e8edf3;border-radius:4px;height:6px;margin-bottom:12px;">
+          <div id="pp-peso-bar" style="height:6px;border-radius:4px;background:#0782c2;transition:.4s;width:0%;"></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:.8rem;color:#6b7a8d;">Estado ERP</span>
+            <span id="pp-erp-badge" style="padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:700;"></span>
+          </div>
+          <button id="pp-btn-erp" onclick="marcarERPdesdePanel()"
+            style="padding:6px 16px;background:#0782c2;color:#fff;border:none;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;">
+            Marcar ERP
+          </button>
+        </div>
+      </div>
+
+      <!-- Referencias en ubicación -->
+      <div id="pp-refs-section" style="margin-bottom:12px;">
+        <div style="font-size:.65rem;font-weight:800;color:#6b7a8d;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding:0 2px;">Referencias en ubicación</div>
+        <div id="pp-refs-lista"></div>
+      </div>
+
+      <!-- Código de barras ubicación -->
+      <div style="background:#fff;border-radius:12px;padding:14px;margin-bottom:12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06);">
+        <div style="font-size:.65rem;color:#6b7a8d;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Código de barras — Ubicación</div>
+        <canvas id="barcode-ubicacion"></canvas>
+        <div style="font-size:.82rem;font-weight:700;color:#0782c2;margin-top:6px;" id="pp-ubicacion-txt"></div>
+      </div>
+
+      <!-- Códigos de barras lotes -->
+      <div id="pp-lotes-barcodes"></div>
+
+      <!-- Botones -->
+      <div style="display:flex;gap:10px;margin-top:4px;">
+        <button onclick="imprimirPanel()" style="flex:1;padding:13px;background:#1a3a5c;color:#fff;border:none;border-radius:12px;font-size:.85rem;font-weight:700;cursor:pointer;">Imprimir</button>
+        <button onclick="abrirTraslado()" style="flex:1;padding:13px;background:#eee413;color:#1a2a3a;border:none;border-radius:12px;font-size:.85rem;font-weight:700;cursor:pointer;">Cambiar ubicación</button>
+      </div>
     </div>
-    <!-- Códigos de barras lotes (se generan dinámicamente) -->
-    <div id="pp-lotes-barcodes"></div>
-    <div style="display:flex;gap:8px;margin-bottom:8px;">
-      <button onclick="imprimirPanel()" style="flex:1;padding:10px;background:#0782c2;color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;">Imprimir</button>
-      <button onclick="abrirTraslado()" style="flex:1;padding:10px;background:#ff9800;color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;">Cambiar ubicación</button>
-    </div>
-    <button onclick="cerrarPanel()" style="width:100%;padding:9px;background:#f0f4f8;color:#1a2a3a;border:1px solid #d8e3ef;border-radius:8px;font-size:.85rem;cursor:pointer;">Cerrar</button>
   </div>
 </div>
+
+<!-- campos ocultos para compatibilidad con funciones existentes -->
+<span id="pp-ref" style="display:none"></span>
+<span id="pp-lote" style="display:none"></span>
+<span id="pp-fecha" style="display:none"></span>
+<span id="pp-peso" style="display:none"></span>
+<span id="pp-erp" style="display:none"></span>
+<span id="pp-multi-detalle" style="display:none"></span>
 
 <!-- Modal traslado -->
 <div id="overlay-traslado" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;align-items:center;justify-content:center;">
@@ -260,7 +461,7 @@ table.rt{border-collapse:separate;border-spacing:0;}
     <div class="modal-title">Cargar referencias desde Excel</div>
     <label>Archivo Excel (.xlsx)</label>
     <input type="file" id="file-refs" accept=".xlsx,.xls">
-    <div class="modal-note"><strong>A:</strong> Nombre · <strong>B:</strong> Peso (kg) · <strong>C:</strong> Unidades x estiba</div>
+    <div class="modal-note"><strong>A:</strong> Grupo · <strong>B:</strong> Marca · <strong>C:</strong> Ref. Artículo · <strong>D:</strong> SKU · <strong>E:</strong> U x Estiba · <strong>F:</strong> Peso (kg)</div>
     <div id="upload-msg" style="font-size:.8rem;color:var(--verde);display:none"></div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="hideUpload()">Cancelar</button>
@@ -354,11 +555,24 @@ function renderRack(){
           td.className='pc';
           td.textContent=codigo;
           if(posData&&posData.inv_id){
-            td.style.background=posData.color||'#0782c2';
+            // Franjas de colores si hay múltiples referencias
+            if(posData.multi && posData.items && posData.items.length > 1){
+              const colores = posData.items.map(it => it.color||'#888');
+              const pct = 100 / colores.length;
+              const stops = colores.map((c,i) => `${c} ${i*pct}%, ${c} ${(i+1)*pct}%`).join(', ');
+              td.style.background = `linear-gradient(to bottom, ${stops})`;
+            } else {
+              td.style.background = posData.color||'#0782c2';
+            }
             td.style.color='#fff';
             if(posData.actualizado_erp) td.className+=' erp';
             if(loteBuscado&&posData.lote&&posData.lote.toLowerCase().includes(loteBuscado.toLowerCase()))
               td.className+=' resaltado';
+            if(refBuscada && posData.referencia &&(
+              posData.referencia.toLowerCase().includes(refBuscada) ||
+              (posData.grupo||'').toLowerCase().includes(refBuscada) ||
+              (posData.marca||'').toLowerCase().includes(refBuscada)
+            )) td.className+=' resaltado';
             refColores[posData.referencia]=posData.color;
             td.addEventListener('click',()=>abrirPanel(codigo,posData));
             td.addEventListener('mouseenter',e=>showTT(e,codigo,posData));
@@ -404,7 +618,8 @@ function renderRack(){
 function showTT(e,codigo,pos){
   const tt=document.getElementById('tooltip');
   const erp=pos.actualizado_erp?'✓ ERP marcado':'clic para marcar ERP';
-  tt.innerHTML=`<strong>${codigo}</strong><br>${pos.referencia}<br>Lote: ${pos.lote||'—'}<br>${pos.fecha_entrada}<br>${erp}`;
+  const loteTooltip = pos.lote ? pos.lote.replace(/\[v:([^\]]+)\]/g,' venc:$1') : '—';
+  tt.innerHTML=`<strong>${codigo}</strong><br>${pos.referencia}<br>Lote: ${loteTooltip}<br>${pos.fecha_entrada}${pos.operador?'<br>👤 '+pos.operador:''}<br>${erp}`;
   tt.style.display='block';tt.style.left=(e.clientX+12)+'px';tt.style.top=(e.clientY-10)+'px';
 }
 function hideTT(){document.getElementById('tooltip').style.display='none';}
@@ -463,13 +678,15 @@ function renderActividad(){
     const origen = partes[0]||'';
     const destino = partes[1]||'';
     const lotes = i.lote ? i.lote.split(' | ').map(l=>l.trim()).filter(l=>l) : [];
-    // Parsear formato "LOT(Xu)" o "LOT" legacy
+    // Parsear formato "LOT(Xu)[v:MM/AA]" o "LOT(Xu)" o legacy
     const lotesHtml = lotes.map(l => {
-      const m = l.match(/^(.+?)\((\d+)u\)$/);
+      const m = l.match(/^(.+?)\((\d+)u\)(?:\[v:([^\]]+)\])?$/);
       if(m) return `<span style="display:inline-flex;align-items:center;gap:3px;background:#f0f4f8;border:1px solid #d8e3ef;border-radius:5px;padding:2px 7px;font-family:monospace;font-size:.72rem;margin-right:3px;">
-        <span style="font-weight:700">${m[1]}</span><span style="color:var(--muted);font-size:.68rem">${m[2]}u</span></span>`;
+        <span style="font-weight:700">${m[1]}</span><span style="color:var(--muted);font-size:.68rem">${m[2]}u</span>${m[3]?`<span style="color:#e65100;font-size:.66rem;background:#fff3e0;border-radius:3px;padding:1px 4px;">📅${m[3]}</span>`:''}
+        </span>`;
       return `<span style="display:inline-block;background:#f0f4f8;border:1px solid #d8e3ef;border-radius:5px;padding:2px 7px;font-family:monospace;font-size:.72rem;margin-right:3px;">${l}</span>`;
     }).join('');
+    const opTag = i.operador ? `<div style="font-size:.68rem;color:var(--muted);text-align:right;margin-top:4px;">👤 ${i.operador}</div>` : '';
 
     if(esSalida){
       const esParcial = i.tipo==='salida_parcial';
@@ -484,10 +701,18 @@ function renderActividad(){
         <div style="font-size:.8rem;font-weight:600;margin-bottom:4px;">${i.referencia||'—'}</div>
         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px;">
           <span style="font-family:monospace;font-size:.8rem;background:#fff5f5;color:#fe5000;padding:3px 8px;border-radius:6px;font-weight:700">${ubicacion}</span>
-          ${esParcial&&i.unidades?`<span style="background:#fff3e0;color:#e65100;border-radius:5px;padding:2px 8px;font-size:.72rem;font-weight:600">${i.unidades} u</span>`:''}
+          ${esParcial&&i.unidades?`<span style="background:#fff3e0;color:#e65100;border-radius:5px;padding:2px 8px;font-size:.72rem;font-weight:600">${i.unidades} u</span>`
+            : !esParcial&&i.unidades?`<span style="background:#fff3e0;color:#e65100;border-radius:5px;padding:2px 8px;font-size:.72rem;font-weight:600">${i.unidades} u</span>`:''}
         </div>
         ${lotes.length?`<div style="font-size:.72rem;color:var(--muted);">Lote: ${lotesHtml}</div>`:''}
         ${i.notas&&i.notas!=='Salida total'?`<div style="font-size:.72rem;color:var(--muted);font-style:italic;">${i.notas}</div>`:''}
+        ${opTag}
+        ${i.foto&&i.foto.trim&&i.foto.trim()?`<div style="margin-top:6px;">
+          <img src="/fotos_salida/${i.foto}" alt="Foto"
+            style="width:100%;max-height:140px;object-fit:cover;border-radius:8px;border:1px solid var(--border);cursor:zoom-in;"
+            onclick="event.stopPropagation();abrirFotoTraz(this.src)"
+            onerror="this.style.display='none'">
+        </div>`:''}
       </div>`;
     } else if(esTraslado){
       const erpBtnT = i.inv_id
@@ -507,13 +732,15 @@ function renderActividad(){
           <span style="font-family:monospace;font-size:.8rem;background:#fff3e0;color:#e65100;padding:3px 8px;border-radius:6px;font-weight:700">${origen}</span>
           <span style="color:var(--muted)">→</span>
           <span style="font-family:monospace;font-size:.8rem;background:#e8f5e9;color:#2e7d32;padding:3px 8px;border-radius:6px;font-weight:700">${destino}</span>
+          ${i.unidades?`<span style="background:#f3e5f5;color:#6a1b9a;border-radius:5px;padding:2px 8px;font-size:.72rem;font-weight:600">${i.unidades} u</span>`:''}
         </div>
         ${lotes.length?`<div style="font-size:.72rem;color:var(--muted);">Lote: ${lotesHtml}</div>`:''}
         ${erpBtnT}
+        ${opTag}
       </div>`;
     } else {
       const uniLabel = i.unidades_por_estiba
-        ? `<span style="background:#f0f4f8;border:1px solid #d8e3ef;border-radius:5px;padding:2px 8px;font-size:.72rem;color:var(--text);font-weight:600">${i.unidades_por_estiba} u/estiba</span>`
+        ? `<span style="background:#f0f4f8;border:1px solid #d8e3ef;border-radius:5px;padding:2px 8px;font-size:.72rem;color:var(--text);font-weight:600">${i.unidades > 0 ? i.unidades + ' u' : i.unidades_por_estiba + ' u/estiba'}</span>`
         : '';
       const ubicacion = i.racks||'';
       const erpBtn = i.actualizado_erp
@@ -533,6 +760,7 @@ function renderActividad(){
         </div>
         ${lotes.length?`<div style="font-size:.72rem;color:var(--muted);margin-bottom:4px;">Lote: ${lotesHtml}</div>`:''}
         ${erpBtn}
+        ${opTag}
       </div>`;
     }
   }).join('');
@@ -564,16 +792,29 @@ function seleccionarPosPanel(codigo) {
   if (posData && posData.inv_id) { abrirPanel(codigo, posData); }
 }
 
-async function cargarRefs(){
-  const r=await fetch('/api/referencias');const refs=await r.json();
+async function cargarRefs(q=''){
+  const r=await fetch('/api/referencias'+(q?'?q='+encodeURIComponent(q):''));
+  const refs=await r.json();
   const el=document.getElementById('lista-refs');
-  if(!refs.length){el.innerHTML='<div class="no-res">Sin referencias. Carga un Excel.</div>';return;}
-  el.innerHTML=refs.map(r=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)">
+  if(!refs.length){el.innerHTML='<div class="no-res">Sin referencias.</div>';return;}
+  // Agrupar por grupo
+  const grupos={};
+  refs.forEach(r=>{
+    const g=r.grupo||'Sin grupo';
+    if(!grupos[g]) grupos[g]=[];
+    grupos[g].push(r);
+  });
+  el.innerHTML=Object.entries(grupos).map(([grupo, items])=>`
+    <div style="padding:6px 0 2px;font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:4px;">${grupo}</div>
+    ${items.map(r=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f0f4f8;">
       <div style="width:10px;height:10px;border-radius:50%;background:${r.color};flex-shrink:0"></div>
-      <div><div style="font-size:.83rem;font-weight:600">${r.nombre}</div>
-      <div style="font-size:.73rem;color:var(--muted)">${r.unidades_por_estiba} u/estiba · ${r.peso_unidad} kg/u</div></div>
-    </div>`).join('');
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.nombre}</div>
+        <div style="font-size:.71rem;color:var(--muted)">${r.marca||''} · ${r.unidades_por_estiba} u/estiba · ${r.peso_unidad} kg/u</div>
+      </div>
+    </div>`).join('')}
+  `).join('');
 }
 
 function switchTab(tab){
@@ -582,6 +823,68 @@ function switchTab(tab){
   document.getElementById('tab-'+tab).classList.add('active');
   if(tab==='refs') cargarRefs();
   if(tab==='actividad') cargarActividad();
+}
+
+function limpiarBusqueda(){
+  document.getElementById('search-input').value='';
+  loteBuscado=''; refBuscada='';
+  renderRack();
+}
+
+let refBuscada = '';
+
+function buscarGeneral(q){
+  const tipo = document.getElementById('search-tipo').value;
+  if(tipo === 'lote'){
+    buscarLote(q);
+  } else {
+    loteBuscado = '';
+    refBuscada = q.toLowerCase().trim();
+    renderRack();
+    if(q.length >= 2){
+      switchTab('buscar');
+      buscarPorRef(q, tipo);
+    }
+  }
+}
+
+async function buscarPorRef(q, tipo){
+  if(!q.trim()){
+    document.getElementById('buscar-results').innerHTML='<div class="no-res">Escribe para buscar</div>';
+    return;
+  }
+  // Buscar referencias que coincidan
+  const r = await fetch('/api/referencias?q='+encodeURIComponent(q));
+  const refs = await r.json();
+  if(!refs.length){
+    document.getElementById('buscar-results').innerHTML=`<div class="no-res">Sin resultados para "${q}"</div>`;
+    return;
+  }
+  // Filtrar según tipo
+  const filtradas = refs.filter(ref => {
+    if(tipo==='sku') return ref.nombre.toLowerCase().includes(q.toLowerCase());
+    if(tipo==='grupo') return (ref.grupo||'').toLowerCase().includes(q.toLowerCase());
+    if(tipo==='marca') return (ref.marca||'').toLowerCase().includes(q.toLowerCase());
+    return true;
+  });
+  // Buscar posiciones ocupadas con esas referencias
+  const refIds = new Set(filtradas.map(r=>r.id));
+  const posiciones = racksData.filter(p => p.inv_id && refIds.has(p.ref_id));
+  const el = document.getElementById('buscar-results');
+  if(!posiciones.length){
+    el.innerHTML=`<div class="no-res">No hay stock de "${q}" en bodega</div>`;
+    return;
+  }
+  el.innerHTML = posiciones.map(p=>{
+    const codigo = `${p.rack}-${p.nivel}-${p.posicion}`;
+    const lotes = p.lote ? p.lote.split(' | ').map(l=>l.trim()).filter(l=>l) : [];
+    return `
+    <div class="search-res" onclick="seleccionarPosPanel('${codigo}')" style="cursor:pointer">
+      <div style="font-weight:600;color:${p.color};font-size:.83rem">${p.referencia}</div>
+      <div style="font-size:.8rem;color:var(--azul);font-family:monospace">${codigo}</div>
+      ${lotes.length?`<div style="font-size:.73rem;color:var(--muted)">Lote: ${lotes.join(' · ')}</div>`:''}
+    </div>`;
+  }).join('');
 }
 
 function buscarLote(q){
@@ -597,13 +900,31 @@ async function buscarLateralLote(q){
   const items=await r.json();
   const el=document.getElementById('buscar-results');
   if(!items.length){el.innerHTML='<div class="no-res">No encontrado: "'+q+'"</div>';renderRack();return;}
-  el.innerHTML=items.map(i=>`
-    <div class="search-res">
-      <div style="font-weight:600;color:${i.color};font-size:.83rem">${i.referencia}</div>
-      <div style="font-size:.8rem;color:var(--azul);font-family:monospace">${i.rack}-${i.nivel}-${i.posicion}</div>
-      <div style="font-size:.73rem;color:var(--muted)">Lote: <strong>${i.lote}</strong> · ${i.fecha_entrada}</div>
-      <div style="font-size:.73rem;color:var(--muted)">${i.actualizado_erp?'✓ ERP marcado':'⏳ Pendiente ERP'}</div>
-    </div>`).join('');
+  el.innerHTML=items.map(i=>{
+    const esMov = i.origen === 'movimiento';
+    const tipoLabel = i.tipo_mov === 'salida_parcial' ? 'Salida parcial' : i.tipo_mov === 'salida' ? 'Salida total' : '';
+    const ubicacion = esMov ? (i.racks||'—') : `${i.rack}-${i.nivel}-${i.posicion}`;
+    const estadoTag = esMov
+      ? `<span style="background:#fde8e8;color:#b71c1c;border-radius:4px;padding:1px 7px;font-size:.68rem;font-weight:700;">↑ ${tipoLabel}</span>`
+      : `<span style="background:#e8f4fd;color:var(--azul);border-radius:4px;padding:1px 7px;font-size:.68rem;font-weight:700;">En bodega</span>`;
+    const fotoHtml = (i.foto && i.foto.trim())
+      ? `<img src="/fotos_salida/${i.foto}" alt="Foto"
+           style="width:100%;max-height:120px;object-fit:cover;border-radius:7px;margin-top:6px;border:1px solid var(--border);cursor:zoom-in;"
+           onclick="abrirFotoTraz(this.src)"
+           onerror="this.style.display='none'">`
+      : '';
+    return `<div class="search-res" onclick="${!esMov?`seleccionarPosPanel('${ubicacion}')`:''}" style="cursor:${!esMov?'pointer':'default'}">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:${i.color||'#888'};flex-shrink:0"></div>
+        <div style="font-weight:600;color:var(--text);font-size:.83rem;flex:1">${i.referencia}</div>
+        ${estadoTag}
+      </div>
+      <div style="font-size:.78rem;color:var(--azul);font-family:monospace;font-weight:700;margin-bottom:2px;">${ubicacion}</div>
+      <div style="font-size:.72rem;color:var(--muted);">Lote: <strong>${i.lote}</strong></div>
+      <div style="font-size:.72rem;color:var(--muted);">${(i.fecha_entrada||'').substring(0,16)}${i.operador?' · 👤 '+i.operador:''}</div>
+      ${fotoHtml}
+    </div>`;
+  }).join('');
   renderRack();
 }
 
@@ -624,44 +945,118 @@ function exportar(){window.location.href='/api/exportar_excel';}
 function abrirPanel(codigo, posData) {
   trasladoInvId = posData.inv_id || null;
   document.getElementById('pp-codigo').textContent = codigo;
-  document.getElementById('pp-ref').textContent = posData.referencia || '—';
-  document.getElementById('pp-lote').textContent = posData.lote || '(sin lote)';
+  document.getElementById('pp-ubicacion-txt').textContent = codigo;
+
+  const items = posData.items || [];
+  const esMulti = items.length > 1;
+
+  // Compat campos ocultos
+  document.getElementById('pp-ref').textContent = esMulti ? `${items.length} referencias` : (posData.referencia || '—');
+  document.getElementById('pp-lote').textContent = esMulti ? items.map(i => i.referencia).join(', ') : (posData.lote || '(sin lote)');
   document.getElementById('pp-fecha').textContent = posData.fecha_entrada || '—';
   document.getElementById('pp-erp').textContent = posData.actualizado_erp ? '✓ Actualizado' : '⏳ Pendiente';
-  document.getElementById('pp-ubicacion-txt').textContent = codigo;
+
+  // Stats bar
+  document.getElementById('pp-stat-refs').textContent = esMulti ? items.length : (posData.referencia ? '1' : '—');
+  const fecha = posData.fecha_entrada ? posData.fecha_entrada.substring(0,16).replace('T',' ') : '—';
+  document.getElementById('pp-stat-fecha').textContent = fecha;
+  document.getElementById('pp-stat-operador').textContent = posData.operador ? '👤 ' + posData.operador : '';
+
+  // Peso
+  const peso = posData.peso_total || 0;
+  const pct = Math.min(Math.round(peso / 1000 * 100), 100);
+  document.getElementById('pp-stat-peso').textContent = peso > 0 ? `${peso} kg` : '—';
+  document.getElementById('pp-peso-label').textContent = peso > 0 ? `${peso} kg — ${pct}%` : '—';
+  const bar = document.getElementById('pp-peso-bar');
+  bar.style.width = pct + '%';
+  bar.style.background = peso > 1000 ? '#fe5000' : peso > 800 ? '#ff9800' : '#0782c2';
+
+  // ERP badge
+  const badge = document.getElementById('pp-erp-badge');
+  if(posData.actualizado_erp) {
+    badge.textContent = '✓ Actualizado';
+    badge.style.cssText = 'padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:700;background:#e8f5e9;color:#1b5e20;';
+  } else {
+    badge.innerHTML = 'Pendiente';
+    badge.style.cssText = 'padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:700;background:#fff3e0;color:#e65100;';
+  }
 
   // Botón ERP
   const btnERP = document.getElementById('pp-btn-erp');
-  if(posData.actualizado_erp){
-    btnERP.textContent='✓ ERP marcado';
-    btnERP.style.background='#e0e0e0';btnERP.style.color='#999';
-    btnERP.style.borderColor='#ccc';btnERP.style.cursor='default';
-    btnERP.onclick=null;
+  if(posData.actualizado_erp) {
+    btnERP.textContent = '✓ ERP marcado';
+    btnERP.style.cssText = 'padding:6px 16px;background:#e0e0e0;color:#999;border:none;border-radius:8px;font-size:.78rem;font-weight:700;cursor:default;';
+    btnERP.onclick = null;
   } else {
-    btnERP.textContent='Marcar ERP';
-    btnERP.style.background='#e8f5e9';btnERP.style.color='#1b5e20';
-    btnERP.style.borderColor='#00b140';btnERP.style.cursor='pointer';
-    btnERP.onclick=marcarERPdesdePanel;
+    btnERP.textContent = 'Marcar ERP';
+    btnERP.style.cssText = 'padding:6px 16px;background:#0782c2;color:#fff;border:none;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;';
+    btnERP.onclick = marcarERPdesdePanel;
   }
+
+  // Lista de referencias
+  const lista = document.getElementById('pp-refs-lista');
+  const allRefs = esMulti ? items : (posData.inv_id ? [{
+    referencia: posData.referencia, lote: posData.lote, color: posData.color,
+    unidades: posData.unidades || 0, unidades_por_estiba: posData.unidades_por_estiba || 1,
+    peso_unidad: posData.peso_unidad || 0, actualizado_erp: posData.actualizado_erp, id: posData.inv_id
+  }] : []);
+
+  lista.innerHTML = allRefs.map(it => {
+    const unis = it.unidades > 0 ? it.unidades : (it.unidades_por_estiba || 1);
+    const pesoIt = Math.round(unis * (it.peso_unidad || 0));
+    const erpIt = it.actualizado_erp
+      ? `<span style="background:#e8f5e9;color:#1b5e20;border-radius:12px;padding:2px 9px;font-size:.68rem;font-weight:700;">✓ ERP</span>`
+      : `<span style="background:#fff3e0;color:#e65100;border-radius:12px;padding:2px 9px;font-size:.68rem;font-weight:700;">Pendiente</span>`;
+    const loteRaw2 = it.lote || '';
+    const lotesArr2 = loteRaw2 ? loteRaw2.split(' | ').map(l=>l.trim()).filter(Boolean) : [];
+    const loteText = lotesArr2.length ? lotesArr2.map(l => {
+      const m2 = l.match(/^(.+?)\((\d+)u\)(?:\[v:([^\]]+)\])?$/);
+      if(m2) return m2[1].trim() + (m2[3] ? ` · venc: ${m2[3]}` : '');
+      return l.replace(/\(\d+u\)(\[v:[^\]]+\])?/g,'').trim();
+    }).join(' | ') : 'sin lote';
+    return `<div style="background:#fff;border-radius:10px;padding:11px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);">
+      <div style="width:10px;height:10px;border-radius:50%;background:${it.color||'#888'};flex-shrink:0;"></div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:.8rem;font-weight:700;color:#1a2a3a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.referencia||'—'}</div>
+        <div style="font-size:.7rem;color:#6b7a8d;margin-top:1px;">${loteText}${pesoIt > 0 ? ' · '+pesoIt+' kg' : ''}</div>
+      </div>
+      <div style="font-size:.9rem;font-weight:800;color:#0782c2;flex-shrink:0;">${unis} u</div>
+      <div style="flex-shrink:0;">${erpIt}</div>
+    </div>`;
+  }).join('') || '<div style="color:#6b7a8d;font-size:.8rem;padding:8px;">Sin referencias</div>';
 
   // Generar código de barras ubicación
   try {
     JsBarcode('#barcode-ubicacion', codigo, {
-      format: 'CODE128', width: 2, height: 60,
-      displayValue: false, margin: 4
+      format: 'CODE128', width: 2, height: 60, displayValue: false, margin: 4
     });
   } catch(e) {}
 
-  // Generar código de barras POR LOTE INDIVIDUAL
+  // Barcodes de lotes — mostrar todos los items
   const lotesContainer = document.getElementById('pp-lotes-barcodes');
   lotesContainer.innerHTML = '';
-  if (posData.lote) {
-    const lotes = posData.lote.split(' | ').map(l => l.trim()).filter(l => l);
+
+  const allItems = esMulti ? items : [{
+    referencia: posData.referencia,
+    lote: posData.lote,
+    unidades: posData.unidades_por_estiba,
+    fecha_vencimiento: ''
+  }];
+
+  allItems.forEach(item => {
+    if(!item.lote) return;
+    const lotes = item.lote.split(' | ').map(l => l.trim()).filter(l => l);
+    if(esMulti){
+      const refLabel = document.createElement('div');
+      refLabel.style.cssText = 'font-size:.72rem;font-weight:700;color:#1a2a3a;margin:8px 0 4px;font-family:sans-serif;';
+      refLabel.textContent = item.referencia;
+      lotesContainer.appendChild(refLabel);
+    }
     lotes.forEach(loteRaw => {
-      // Parsear "343(20u)" → loteNum="343", cantidad="20u"
-      const m = loteRaw.match(/^(.+?)\((\d+)u\)$/);
-      const loteNum = m ? m[1] : loteRaw;
+      const m = loteRaw.match(/^(.+?)\((\d+)u\)(?:\[v:([^\]]+)\])?$/);
+      const loteNum = m ? m[1] : loteRaw.replace(/\(\d+u\)(\[v:[^\]]+\])?/,'').trim();
       const cantidad = m ? m[2]+'u' : null;
+      const venc = m ? m[3] : null;
       const wrap = document.createElement('div');
       wrap.style.cssText = 'background:#fff;border:1px solid #d8e3ef;border-radius:10px;padding:12px;margin-bottom:10px;text-align:center;';
       const label = document.createElement('div');
@@ -670,15 +1065,17 @@ function abrirPanel(codigo, posData) {
       const canvas = document.createElement('canvas');
       const loteTxt = document.createElement('div');
       loteTxt.style.cssText = 'font-size:.8rem;font-weight:700;color:#fe5000;margin-top:4px;font-family:monospace;';
-      loteTxt.innerHTML = loteNum + (cantidad ? ` <span style="font-size:.72rem;color:#6b7a8d;font-weight:400">(${cantidad})</span>` : '');
+      loteTxt.innerHTML = loteNum
+        + (cantidad ? ` <span style="font-size:.72rem;color:#6b7a8d;font-weight:400">(${cantidad})</span>` : '')
+        + (venc ? ` <span style="font-size:.72rem;color:#e65100;background:#fff3e0;border-radius:3px;padding:1px 5px;">📅 ${venc}</span>` : '');
       wrap.appendChild(label); wrap.appendChild(canvas); wrap.appendChild(loteTxt);
       lotesContainer.appendChild(wrap);
       try {
         JsBarcode(canvas, loteNum, { format:'CODE128', width:2, height:60, displayValue:false, margin:4 });
       } catch(e) {}
     });
-    lotesContainer.style.marginBottom = '4px';
-  }
+  });
+  if(allItems.some(i=>i.lote)) lotesContainer.style.marginBottom = '4px';
 
   const panel = document.getElementById('panel-pos');
   panel.style.display = 'flex';
@@ -819,5 +1216,566 @@ document.getElementById('panel-pos').addEventListener('click', function(e) {
 
 init();
 </script>
+<!-- ── MODAL ALERTAS ── -->
+<div class="alertas-overlay" id="alertas-overlay" onclick="if(event.target===this)cerrarAlertas()">
+  <div class="alertas-modal">
+    <div class="alertas-header">
+      <div class="alertas-header-title" style="display:flex;align-items:center;gap:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Alertas de inventario
+      </div>
+      <button class="alertas-close" onclick="cerrarAlertas()">✕</button>
+    </div>
+    <div class="alertas-body">
+      <!-- Resumen -->
+      <div class="alertas-resumen" id="ar-resumen">
+        <div class="ar-card vencido">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c62828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:4px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div class="ar-num" id="ar-vencido">—</div><div class="ar-label">Vencidos</div></div>
+        <div class="ar-card critico">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:4px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div class="ar-num" id="ar-critico">—</div><div class="ar-label">≤ 30 días</div></div>
+        <div class="ar-card proximo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f9a825" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:4px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <div class="ar-num" id="ar-proximo">—</div><div class="ar-label">31–90 días</div></div>
+        <div class="ar-card rotacion">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6a1b9a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:4px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.8"/></svg>
+          <div class="ar-num" id="ar-rotacion">—</div><div class="ar-label">Sin rotar +6m</div></div>
+      </div>
+      <!-- Tabs -->
+      <div class="alertas-tabs">
+        <div class="alertas-tab active" id="atab-venc" onclick="switchAlertaTab('venc')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Vencimientos</div>
+        <div class="alertas-tab" id="atab-rot"  onclick="switchAlertaTab('rot')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.8"/></svg>Rotación</div>
+      </div>
+      <!-- Contenido vencimientos -->
+      <div id="apanel-venc">
+        <div id="alertas-venc-lista"><div class="alertas-empty">⏳ Cargando...</div></div>
+      </div>
+      <!-- Contenido rotación -->
+      <div id="apanel-rot" style="display:none">
+        <div id="alertas-rot-lista"><div class="alertas-empty">⏳ Cargando...</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── ALERTAS ──
+let alertasData = null;
+
+async function abrirAlertas() {
+  document.getElementById('alertas-overlay').classList.add('show');
+  await cargarAlertas();
+}
+
+function cerrarAlertas() {
+  document.getElementById('alertas-overlay').classList.remove('show');
+}
+
+async function cargarAlertas() {
+  // Mostrar loading
+  document.getElementById('alertas-venc-lista').innerHTML = '<div class="alertas-empty">⏳ Cargando...</div>';
+  try {
+    const ctrl = new AbortController();
+    const timeout = setTimeout(() => ctrl.abort(), 10000); // 10s máximo
+    const r = await fetch('/api/alertas', { signal: ctrl.signal });
+    clearTimeout(timeout);
+    alertasData = await r.json();
+    renderAlertas();
+  } catch(e) {
+    const msg = e.name === 'AbortError' ? '⏱️ Tiempo de espera agotado. Intenta de nuevo.' : '❌ Error al cargar alertas';
+    document.getElementById('alertas-venc-lista').innerHTML =
+      `<div class="alertas-empty">${msg}<br><button onclick="cargarAlertas()" style="margin-top:10px;padding:8px 18px;background:#0782c2;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Reintentar</button></div>`;
+  }
+}
+
+function renderAlertas() {
+  const d = alertasData;
+  // Resumen
+  document.getElementById('ar-vencido').textContent  = d.resumen.vencidos;
+  document.getElementById('ar-critico').textContent  = d.resumen.criticos;
+  document.getElementById('ar-proximo').textContent  = d.resumen.proximos;
+  document.getElementById('ar-rotacion').textContent = d.resumen.sin_rotacion;
+
+  // Badge topbar
+  const total = d.resumen.vencidos + d.resumen.criticos + d.resumen.sin_rotacion;
+  const badge = document.getElementById('badge-alertas');
+  if (total > 0) { badge.textContent = total > 99 ? '99+' : total; badge.style.display = 'block'; }
+  else { badge.style.display = 'none'; }
+
+  // ── Vencimientos ──
+  const vl = document.getElementById('alertas-venc-lista');
+  if (!d.vencimientos.length) {
+    vl.innerHTML = '<div class="alertas-empty">✅ No hay productos próximos a vencer en los próximos 3 meses</div>';
+  } else {
+    const grupos = { vencido: [], critico: [], proximo: [] };
+    d.vencimientos.forEach(v => grupos[v.nivel].push(v));
+
+    let html = '';
+    const secs = [
+      { key: 'vencido', label: '<svg width="11" height="11" viewBox="0 0 24 24" fill="#c62828" style="vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/></svg> Ya vencidos', tag: 'vencido' },
+      { key: 'critico', label: '<svg width="11" height="11" viewBox="0 0 24 24" fill="#e65100" style="vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/></svg> Vencen en ≤ 30 días', tag: 'critico' },
+      { key: 'proximo', label: '<svg width="11" height="11" viewBox="0 0 24 24" fill="#f9a825" style="vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/></svg> Vencen en 31–90 días', tag: 'proximo' }
+    ];
+    secs.forEach(sec => {
+      if (!grupos[sec.key].length) return;
+      html += `<div class="alertas-sec-title">${sec.label} (${grupos[sec.key].length})</div>`;
+      grupos[sec.key].forEach(v => {
+        const diasTxt = v.dias < 0 ? `hace ${Math.abs(v.dias)} días` : `en ${v.dias} días`;
+        const loteClean = (v.lote||'').replace(/\(\d+u\)(\[v:[^\]]+\])?/g,'').replace(/\|/g,'·').trim();
+        html += `<div class="alerta-item ${sec.key}">
+          <div class="alerta-dot" style="background:${v.color||'#888'}"></div>
+          <div class="alerta-ref" title="${v.referencia}">${v.referencia}</div>
+          <span class="alerta-ubi">${v.ubicacion}</span>
+          <span class="alerta-meta">${v.fecha_vencimiento}</span>
+          <span class="alerta-meta" style="color:#888">${diasTxt}</span>
+          <span class="alerta-tag ${sec.key}">${v.dias < 0 ? 'VENCIDO' : sec.key === 'critico' ? 'CRÍTICO' : 'PRÓXIMO'}</span>
+        </div>`;
+      });
+    });
+    vl.innerHTML = html;
+  }
+
+  // ── Rotación ──
+  const rl = document.getElementById('alertas-rot-lista');
+  if (!d.sin_rotacion.length) {
+    rl.innerHTML = '<div class="alertas-empty">✅ Todos los productos tuvieron movimiento en los últimos 6 meses</div>';
+  } else {
+    let html = `<div class="alertas-sec-title">📦 Sin movimiento hace +6 meses (${d.sin_rotacion.length} referencias)</div>`;
+    d.sin_rotacion.forEach(v => {
+      const anios = v.dias_quieto >= 365 ? ` (${(v.dias_quieto/365).toFixed(1)} años)` : '';
+      const nivel = v.nivel === 'critico' ? 'critico-rot' : 'advertencia';
+      html += `<div class="alerta-item ${nivel}">
+        <div class="alerta-dot" style="background:${v.color||'#888'}"></div>
+        <div class="alerta-ref" title="${v.referencia}">${v.referencia}</div>
+        <span class="alerta-ubi">${v.ubicacion}</span>
+        <span class="alerta-meta">Última act: ${v.ultima_actividad}</span>
+        <span class="alerta-meta" style="color:#888">${v.dias_quieto} días${anios}</span>
+        <span class="alerta-tag ${nivel}">${v.nivel === 'critico' ? '+1 AÑO' : '+6 MESES'}</span>
+      </div>`;
+    });
+    rl.innerHTML = html;
+  }
+}
+
+function switchAlertaTab(tab) {
+  document.getElementById('apanel-venc').style.display = tab === 'venc' ? 'block' : 'none';
+  document.getElementById('apanel-rot').style.display  = tab === 'rot'  ? 'block' : 'none';
+  document.getElementById('atab-venc').classList.toggle('active', tab === 'venc');
+  document.getElementById('atab-rot').classList.toggle('active', tab === 'rot');
+}
+
+// Cargar badge al iniciar
+window.addEventListener('load', () => setTimeout(async () => {
+  try {
+    const r = await fetch('/api/alertas');
+    alertasData = await r.json();
+    const total = alertasData.resumen.vencidos + alertasData.resumen.criticos + alertasData.resumen.sin_rotacion;
+    const badge = document.getElementById('badge-alertas');
+    if (total > 0) { badge.textContent = total > 99 ? '99+' : total; badge.style.display = 'block'; }
+  } catch(e) {}
+}, 1500));
+</script>
+<!-- ── MODAL STOCK ── -->
+<div class="stock-overlay" id="stock-overlay" onclick="if(event.target===this)cerrarStock()">
+  <div class="stock-modal">
+    <div class="stock-modal-header">
+      <div style="display:flex;align-items:center;gap:8px;color:#fff;font-weight:700;font-size:1rem;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        Stock por referencia
+      </div>
+      <button class="alertas-close" onclick="cerrarStock()">✕</button>
+    </div>
+    <div class="stock-modal-body">
+      <div class="stock-toolbar">
+        <div class="stock-input-wrap">
+          <svg class="stock-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="stock-input" id="sm-search" type="text" placeholder="Buscar referencia, marca, grupo..." oninput="renderStockModal()">
+        </div>
+        <div class="stock-rack-btns">
+          <button class="stock-rack-btn active" onclick="selSmRack('',this)">Todos</button>
+          <button class="stock-rack-btn" onclick="selSmRack('J',this)">J</button>
+          <button class="stock-rack-btn" onclick="selSmRack('K',this)">K</button>
+          <button class="stock-rack-btn" onclick="selSmRack('L',this)">L</button>
+          <button class="stock-rack-btn" onclick="selSmRack('M',this)">M</button>
+        </div>
+        <select class="stock-sort-sel" id="sm-sort" onchange="renderStockModal()">
+          <option value="az">A – Z</option>
+          <option value="za">Z – A</option>
+          <option value="desc">Mayor stock</option>
+          <option value="asc">Menor stock</option>
+        </select>
+      </div>
+      <div class="stock-meta">
+        <span class="stock-meta-count" id="sm-count">—</span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="stock-table">
+          <thead>
+            <tr>
+              <th>Referencia</th>
+              <th>Grupo / Marca</th>
+              <th>Unidades</th>
+              <th>Posiciones</th>
+              <th>Pend. ERP</th>
+              <th>Últ. entrada</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="sm-tbody"></tbody>
+        </table>
+      </div>
+      <div id="sm-empty" class="stock-empty-msg" style="display:none">Sin resultados</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── MODAL STOCK ──
+let smData = [];
+let smRack = '';
+let smCargado = false;
+
+async function abrirStock() {
+  document.getElementById('stock-overlay').classList.add('show');
+  if (!smCargado) {
+    document.getElementById('sm-tbody').innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted)">Cargando...</td></tr>';
+    try {
+      const r = await fetch('/api/stock_referencias');
+      smData = await r.json();
+      smCargado = true;
+      renderStockModal();
+    } catch(e) {
+      document.getElementById('sm-tbody').innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--naranja)">Error al cargar</td></tr>';
+    }
+  } else {
+    renderStockModal();
+  }
+}
+
+function cerrarStock() {
+  document.getElementById('stock-overlay').classList.remove('show');
+}
+
+function selSmRack(rack, btn) {
+  smRack = rack;
+  document.querySelectorAll('.stock-rack-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderStockModal();
+}
+
+function renderStockModal() {
+  const q     = (document.getElementById('sm-search').value || '').toLowerCase().trim();
+  const sort  = document.getElementById('sm-sort').value;
+
+  let lista = smData.filter(ref => {
+    if (smRack && !ref.ubicaciones.some(u => u.rack === smRack)) return false;
+    if (q) return ref.nombre.toLowerCase().includes(q) ||
+                  ref.grupo.toLowerCase().includes(q)  ||
+                  ref.marca.toLowerCase().includes(q);
+    return true;
+  });
+
+  lista = lista.slice().sort((a, b) => {
+    if (sort === 'az')   return a.nombre.localeCompare(b.nombre);
+    if (sort === 'za')   return b.nombre.localeCompare(a.nombre);
+    if (sort === 'desc') return b.total_unidades - a.total_unidades;
+    if (sort === 'asc')  return a.total_unidades - b.total_unidades;
+    return 0;
+  });
+
+  const totalU = lista.reduce((s, r) => s + r.total_unidades, 0);
+  document.getElementById('sm-count').textContent =
+    `${lista.length} referencia${lista.length !== 1 ? 's' : ''} · ${totalU.toLocaleString()} unidades en total`;
+
+  const empty = document.getElementById('sm-empty');
+  const tbody = document.getElementById('sm-tbody');
+
+  if (!lista.length) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  tbody.innerHTML = lista.map((ref, idx) => {
+    const ubics = smRack ? ref.ubicaciones.filter(u => u.rack === smRack) : ref.ubicaciones;
+    const totalU = ubics.reduce((s, u) => s + u.unidades, 0);
+    const erpPend = ref.pendientes_erp > 0
+      ? `<span style="color:var(--naranja);font-weight:700;">${ref.pendientes_erp}</span>`
+      : `<span style="color:var(--verde);">0</span>`;
+
+    const expandId = `sm-exp-${idx}`;
+    const ubicsHtml = ubics.map(u => {
+      const loteClean = (u.lote||'').replace(/\(\d+u\)(\[v:[^\]]+\])?/g,'').replace(/\|/g,'·').trim();
+      return `<div class="stock-ubic-card">
+        <div class="stock-ubic-pos">${u.ubicacion}</div>
+        <div class="stock-ubic-u2">${u.unidades.toLocaleString()} u</div>
+        <div class="stock-ubic-lote">${loteClean || 'Sin lote'}</div>
+        <div style="font-size:.68rem;color:var(--muted)">${u.fecha_entrada || ''}</div>
+        <span class="stock-erp-chip ${u.erp ? 'ok' : 'pend'}">${u.erp ? '✓ ERP' : 'Pend. ERP'}</span>
+      </div>`;
+    }).join('');
+
+    return `<tr onclick="toggleSmRow('${expandId}', this)" style="cursor:pointer;">
+      <td>
+        <span class="stock-ref-dot" style="background:${ref.color}"></span>
+        <span class="stock-ref-name">${ref.nombre}</span>
+      </td>
+      <td><span class="stock-ref-sub">${[ref.grupo, ref.marca].filter(Boolean).join(' · ') || '—'}</span></td>
+      <td><span class="stock-u-big">${totalU.toLocaleString()}</span></td>
+      <td>${ubics.length}</td>
+      <td>${erpPend}</td>
+      <td style="color:var(--muted);font-size:.78rem">${ref.ultima_entrada || '—'}</td>
+      <td><svg id="chv-${expandId}" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .2s"><polyline points="9 18 15 12 9 6"/></svg></td>
+    </tr>
+    <tr class="stock-expand-row" id="${expandId}">
+      <td class="stock-expand-cell" colspan="7">
+        <div class="stock-expand-inner">
+          <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px;">Ubicaciones (${ubics.length})</div>
+          <div class="stock-ubic-grid">${ubicsHtml}</div>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleSmRow(id, tr) {
+  const row = document.getElementById(id);
+  const chv = document.getElementById('chv-' + id);
+  const isOpen = row.classList.contains('open');
+  // Cerrar todos
+  document.querySelectorAll('.stock-expand-row.open').forEach(r => {
+    r.classList.remove('open');
+    const c = document.getElementById('chv-' + r.id);
+    if (c) c.style.transform = '';
+    r.previousElementSibling.classList.remove('expanded');
+  });
+  if (!isOpen) {
+    row.classList.add('open');
+    chv.style.transform = 'rotate(90deg)';
+    tr.classList.add('expanded');
+  }
+}
+
+</script>
+
+<!-- ── MODAL TRAZABILIDAD LOTE ── -->
+<div class="traz-overlay" id="traz-overlay" onclick="if(event.target===this)cerrarTrazabilidad()">
+  <div class="traz-modal">
+    <div class="traz-header">
+      <div style="display:flex;align-items:center;gap:8px;color:#fff;font-weight:700;font-size:1rem;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Buscar lote / trazabilidad
+      </div>
+      <button class="alertas-close" onclick="cerrarTrazabilidad()">✕</button>
+    </div>
+    <div class="traz-body">
+      <div class="traz-search-row">
+        <div class="traz-inp-wrap">
+          <svg class="traz-inp-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="traz-inp" id="traz-input" type="text" placeholder="Escribe el número de lote..." onkeydown="if(event.key==='Enter')buscarLoteTrazabilidad()">
+        </div>
+        <button class="traz-btn-buscar" onclick="buscarLoteTrazabilidad()">Buscar</button>
+      </div>
+      <div id="traz-resultado"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── MODAL TRAZABILIDAD ──
+function abrirTrazabilidad(loteInicial) {
+  document.getElementById('traz-overlay').classList.add('show');
+  const inp = document.getElementById('traz-input');
+  document.getElementById('traz-resultado').innerHTML = '';
+  if (loteInicial) {
+    inp.value = loteInicial;
+    buscarLoteTrazabilidad();
+  } else {
+    inp.value = '';
+    setTimeout(() => inp.focus(), 100);
+  }
+}
+
+function cerrarTrazabilidad() {
+  document.getElementById('traz-overlay').classList.remove('show');
+}
+
+async function buscarLoteTrazabilidad() {
+  const q = document.getElementById('traz-input').value.trim();
+  if (!q) return;
+  const cont = document.getElementById('traz-resultado');
+  cont.innerHTML = '<div class="traz-empty">Buscando...</div>';
+  try {
+    const r = await fetch('/api/trazabilidad_lote?q=' + encodeURIComponent(q));
+    const data = await r.json();
+    renderTrazabilidad(data, q);
+  } catch(e) {
+    cont.innerHTML = '<div class="traz-empty" style="color:var(--naranja)">Error al buscar. Verifica conexión.</div>';
+  }
+}
+
+function parseLotes(loteStr) {
+  // Formato: "LOTE1(20u)[v:2025-06] | LOTE2(10u)"
+  if (!loteStr) return [];
+  return loteStr.split('|').map(s => s.trim()).filter(Boolean);
+}
+
+function tipoLabel(tipo) {
+  const map = {
+    'entrada': 'Entrada',
+    'salida': 'Salida total',
+    'salida_parcial': 'Salida parcial',
+    'traslado': 'Traslado'
+  };
+  return map[tipo] || tipo;
+}
+
+function renderTrazabilidad(data, q) {
+  const cont = document.getElementById('traz-resultado');
+  const totalResultados = data.stock.length + data.movimientos.length;
+
+  if (totalResultados === 0) {
+    cont.innerHTML = `<div class="traz-empty">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;display:block;margin-left:auto;margin-right:auto"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      No se encontró ningún registro para <strong>"${q}"</strong>.<br>
+      <span style="font-size:.78rem;margin-top:4px;display:block">El lote no existe en bodega ni en el historial de movimientos.</span>
+    </div>`;
+    return;
+  }
+
+  let html = '';
+
+  // ── EN BODEGA (stock actual) ──
+  if (data.stock.length > 0) {
+    html += `<div class="traz-section">
+      <div class="traz-section-title">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        Actualmente en bodega <span class="traz-badge verde">${data.stock.length}</span>
+      </div>`;
+    data.stock.forEach(s => {
+      const lotes = parseLotes(s.lote);
+      const venc = s.fecha_vencimiento || '';
+      html += `<div class="traz-card">
+        <div class="traz-card-top">
+          <div class="traz-card-ref">
+            <span class="traz-card-dot" style="background:${s.color||'#888'}"></span>
+            ${s.referencia}
+            ${s.grupo ? `<span style="font-size:.72rem;font-weight:400;color:var(--muted)">${s.grupo}${s.marca?' · '+s.marca:''}</span>` : ''}
+          </div>
+          <span class="traz-status-en-bodega">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            En bodega — ${s.ubicacion}
+          </span>
+        </div>
+        <div class="traz-card-grid">
+          <div class="traz-field">
+            <div class="traz-field-label">Lote(s)</div>
+            <div class="traz-field-val mono azul">${lotes.length > 0 ? lotes.join('<br>') : (s.lote || '—')}</div>
+          </div>
+          <div class="traz-field">
+            <div class="traz-field-label">Ubicación</div>
+            <div class="traz-field-val mono azul">${s.ubicacion}</div>
+          </div>
+          <div class="traz-field">
+            <div class="traz-field-label">Unidades</div>
+            <div class="traz-field-val azul">${s.unidades || '—'}</div>
+          </div>
+          <div class="traz-field">
+            <div class="traz-field-label">Fecha entrada</div>
+            <div class="traz-field-val">${(s.fecha_entrada||'').slice(0,16)}</div>
+          </div>
+          <div class="traz-field">
+            <div class="traz-field-label">Fecha vencimiento</div>
+            <div class="traz-field-val ${venc ? 'naranja' : ''}">${venc || 'No registrada'}</div>
+          </div>
+          <div class="traz-field">
+            <div class="traz-field-label">Operador entrada</div>
+            <div class="traz-field-val">${s.operador || '—'}</div>
+          </div>
+          <div class="traz-field">
+            <div class="traz-field-label">Estado ERP</div>
+            <div class="traz-field-val ${s.actualizado_erp ? 'verde' : 'naranja'}">${s.actualizado_erp ? 'Actualizado' : 'Pendiente'}</div>
+          </div>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  // ── HISTORIAL DE MOVIMIENTOS ──
+  if (data.movimientos.length > 0) {
+    html += `<div class="traz-section">
+      <div class="traz-section-title">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        Historial de movimientos <span class="traz-badge">${data.movimientos.length}</span>
+      </div>`;
+    data.movimientos.forEach(m => {
+      const esSalida = m.tipo === 'salida' || m.tipo === 'salida_parcial';
+      html += `<div class="traz-card">
+        <div class="traz-card-top">
+          <div class="traz-card-ref">
+            <span class="traz-card-dot" style="background:${m.color||'#888'}"></span>
+            ${m.referencia || 'Sin referencia'}
+            ${m.grupo ? `<span style="font-size:.72rem;font-weight:400;color:var(--muted)">${m.grupo}${m.marca?' · '+m.marca:''}</span>` : ''}
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <span class="traz-card-tipo traz-tipo-${m.tipo}">${tipoLabel(m.tipo)}</span>
+            ${esSalida ? `<span class="traz-status-salio">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              Salió de bodega
+            </span>` : ''}
+          </div>
+        </div>
+        <div class="traz-card-grid">
+          <div class="traz-field">
+            <div class="traz-field-label">Lote</div>
+            <div class="traz-field-val mono azul">${m.lote || '—'}</div>
+          </div>
+          <div class="traz-field">
+            <div class="traz-field-label">Fecha</div>
+            <div class="traz-field-val">${(m.fecha||'').slice(0,16)}</div>
+          </div>
+          <div class="traz-field">
+            <div class="traz-field-label">Unidades</div>
+            <div class="traz-field-val ${esSalida?'naranja':'azul'}">${m.unidades || '—'}</div>
+          </div>
+          <div class="traz-field">
+            <div class="traz-field-label">Posición / Rack</div>
+            <div class="traz-field-val mono">${m.racks || '—'}</div>
+          </div>
+          <div class="traz-field">
+            <div class="traz-field-label">Notas</div>
+            <div class="traz-field-val">${m.notas || '—'}</div>
+          </div>
+          <div class="traz-field">
+            <div class="traz-field-label">Operador</div>
+            <div class="traz-field-val">${m.operador || '—'}</div>
+          </div>
+        </div>
+        ${m.foto ? `<div style="margin-top:10px;">
+          <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin-bottom:6px;">📷 Foto evidencia</div>
+          <img src="/fotos_salida/${m.foto}" alt="Foto evidencia"
+            style="width:100%;max-height:260px;object-fit:cover;border-radius:8px;border:1px solid var(--border);cursor:pointer;"
+            onclick="abrirFotoTraz(this.src)"
+            onerror="this.parentElement.innerHTML='<span style=\'font-size:.75rem;color:var(--muted)\'>Foto no disponible</span>'">
+        </div>` : ''}
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  cont.innerHTML = html;
+}
+
+function abrirFotoTraz(src) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out;';
+  overlay.innerHTML = `<img src="${src}" style="max-width:95vw;max-height:92vh;border-radius:10px;object-fit:contain;box-shadow:0 8px 40px rgba(0,0,0,.5);">
+    <button style="position:fixed;top:16px;right:16px;background:rgba(255,255,255,.15);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>`;
+  overlay.onclick = () => document.body.removeChild(overlay);
+  document.body.appendChild(overlay);
+}
+</script>
 </body>
-</html>

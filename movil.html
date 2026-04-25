@@ -100,9 +100,10 @@ select:focus,input:focus{border-color:var(--azul);}
 .estiba-card{background:var(--bg);border:2px solid var(--border);border-radius:10px;padding:12px;}
 .estiba-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
 .estiba-num{font-size:.85rem;font-weight:700;}
-.lote-row{display:flex;gap:6px;align-items:center;margin-bottom:5px;}
-.lote-row input[type=text]{flex:2;padding:8px 10px;font-size:14px;}
-.lote-row input[type=number]{flex:1;padding:8px 10px;font-size:14px;}
+.lote-row{display:flex;gap:5px;align-items:center;margin-bottom:5px;flex-wrap:wrap;}
+.lote-row input[type=text]{flex:2;min-width:80px;padding:8px 10px;font-size:14px;}
+.lote-row input[type=number]{flex:1;min-width:50px;padding:8px 10px;font-size:14px;}
+.lote-row .inp-venc{flex:1.4;min-width:70px;padding:8px 8px;font-size:13px;color:var(--muted);}
 .btn-del{background:none;border:none;color:#ef5350;font-size:1.3rem;cursor:pointer;padding:2px 6px;flex-shrink:0;}
 .btn-add-lote{background:none;border:1px dashed var(--azul);color:var(--azul);border-radius:8px;padding:7px;font-size:.8rem;cursor:pointer;width:100%;margin-top:4px;}
 .sobrante-card{background:#fff8e1;border:2px solid #f9a825;border-radius:10px;padding:12px;margin-top:10px;}
@@ -142,9 +143,78 @@ select:focus,input:focus{border-color:var(--azul);}
 .confirm-table tr:last-child td{border-bottom:none;}
 .confirm-table td:first-child{color:var(--muted);}
 .confirm-table td:last-child{font-weight:600;text-align:right;font-size:.82rem;}
+
+
+/* ── MODO STOCK ── */
+.stock-search-wrap{position:relative;margin-bottom:12px;}
+.stock-search{width:100%;padding:11px 14px 11px 38px;border-radius:10px;border:1.5px solid var(--border);font-size:.9rem;background:var(--white);color:var(--text);outline:none;-webkit-appearance:none;}
+.stock-search:focus{border-color:var(--azul);}
+.stock-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);pointer-events:none;}
+.stock-filtros{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;}
+.stock-filtro{padding:6px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);font-size:.75rem;font-weight:600;color:var(--muted);white-space:nowrap;cursor:pointer;flex-shrink:0;}
+.stock-filtro.active{border-color:var(--azul);background:#e8f4fd;color:var(--azul);}
+.stock-sort{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.stock-count{font-size:.72rem;color:var(--muted);}
+.stock-sort-btn{font-size:.72rem;color:var(--azul);font-weight:600;background:none;border:none;cursor:pointer;padding:4px 0;}
+.stock-card{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:8px;overflow:hidden;transition:.15s;}
+.stock-card-header{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;}
+.stock-card-header:active{background:#f7f9fc;}
+.stock-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.stock-info{flex:1;min-width:0;}
+.stock-nombre{font-size:.85rem;font-weight:700;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.stock-sub{font-size:.7rem;color:var(--muted);margin-top:1px;}
+.stock-nums{text-align:right;flex-shrink:0;}
+.stock-total-u{font-size:1.1rem;font-weight:800;color:var(--azul);line-height:1;}
+.stock-total-lbl{font-size:.62rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.3px;}
+.stock-chevron{color:var(--muted);font-size:.9rem;flex-shrink:0;transition:transform .2s;}
+.stock-chevron.open{transform:rotate(90deg);}
+.stock-detail{display:none;border-top:1px solid var(--border);background:#f7fbff;}
+.stock-detail.open{display:block;}
+.stock-detail-header{display:flex;gap:12px;padding:10px 14px 8px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.stock-stat{text-align:center;flex:1;min-width:60px;}
+.stock-stat-num{font-size:.95rem;font-weight:700;}
+.stock-stat-lbl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;}
+.stock-ubic-lista{padding:8px 14px 12px;}
+.stock-ubic-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #eef2f7;}
+.stock-ubic-row:last-child{border-bottom:none;}
+.stock-ubic-badge{font-family:monospace;font-size:.78rem;font-weight:700;background:#e8f4fd;color:var(--azul);padding:3px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;}
+.stock-ubic-info{flex:1;min-width:0;}
+.stock-ubic-u{font-size:.82rem;font-weight:700;color:var(--text);}
+.stock-ubic-lote{font-size:.68rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.stock-erp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.stock-empty{text-align:center;color:var(--muted);padding:40px 20px;font-size:.88rem;}
+
+/* Login overlay */
+.login-overlay{position:fixed;inset:0;background:var(--azul);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.login-box{background:#fff;border-radius:20px;padding:28px 24px;width:100%;max-width:360px;box-shadow:0 8px 40px rgba(0,0,0,.25);}
+.login-title{font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:4px;}
+.login-sub{font-size:.8rem;color:var(--muted);margin-bottom:20px;}
+.op-list{display:flex;flex-direction:column;gap:8px;}
+.op-btn{padding:13px 16px;border-radius:12px;border:2px solid var(--border);background:var(--bg);font-size:.95rem;font-weight:600;color:var(--text);cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:.15s;}
+.op-btn:active{background:#e8f4fd;border-color:var(--azul);}
+.op-avatar{width:34px;height:34px;border-radius:50%;background:var(--azul);color:#fff;font-weight:700;font-size:.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+/* Chip operador en topbar */
+.op-chip{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 10px 4px 5px;cursor:pointer;}
+.op-chip-avatar{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.9);color:var(--azul);font-weight:700;font-size:.65rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.op-chip-name{color:#fff;font-size:.72rem;font-weight:600;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 </style>
 </head>
 <body>
+
+<!-- LOGIN OVERLAY -->
+<div class="login-overlay" id="login-overlay">
+  <div style="text-align:center;margin-bottom:28px;">
+    <img src="/static/logo.jpeg" alt="logo" style="height:56px;width:56px;border-radius:14px;object-fit:cover;border:3px solid rgba(255,255,255,.4);margin-bottom:12px;" onerror="this.style.display='none'">
+    <div style="color:#fff;font-weight:700;font-size:1.3rem;letter-spacing:-.3px;">Dist. Díaz Ramos</div>
+    <div style="color:rgba(255,255,255,.7);font-size:.8rem;margin-top:2px;">Sistema de bodega</div>
+  </div>
+  <div class="login-box">
+    <div class="login-title">¿Quién eres?</div>
+    <div class="login-sub">Selecciona tu nombre para continuar</div>
+    <div class="op-list" id="op-list"></div>
+  </div>
+</div>
+
 <div class="topbar">
   <div style="display:flex;align-items:center;gap:8px;">
     <img src="/static/logo.jpeg" alt="logo" style="height:32px;width:32px;border-radius:7px;object-fit:cover;border:2px solid rgba(255,255,255,.3);" onerror="this.style.display='none'">
@@ -153,7 +223,11 @@ select:focus,input:focus{border-color:var(--azul);}
       <div style="color:var(--amarillo);font-size:.65rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;">Bodega</div>
     </div>
   </div>
-  <div style="display:flex;align-items:center;gap:10px;">
+  <div style="display:flex;align-items:center;gap:8px;">
+    <div class="op-chip" id="op-chip-topbar" onclick="mostrarLogin()" style="display:none;">
+      <div class="op-chip-avatar" id="op-chip-inicial">?</div>
+      <span class="op-chip-name" id="op-chip-nombre">—</span>
+    </div>
     <button onclick="cambiarModo('consulta')" id="topbar-btn-consulta"
       style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);color:#fff;padding:6px 13px;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;">
       Ver / Mover
@@ -322,6 +396,33 @@ select:focus,input:focus{border-color:var(--azul);}
   <div id="cons-lista"></div>
 </div>
 
+
+<!-- MODO STOCK -->
+<div class="modo" id="modo-stock">
+  <!-- Buscador -->
+  <div class="stock-search-wrap">
+    <svg class="stock-search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input class="stock-search" id="stock-search" type="text" placeholder="Buscar referencia, marca o grupo..." oninput="filtrarStock()" autocomplete="off">
+  </div>
+  <!-- Filtros por rack -->
+  <div class="stock-filtros" id="stock-filtros">
+    <button class="stock-filtro active" onclick="selStockRack('',this)">Todos</button>
+    <button class="stock-filtro" onclick="selStockRack('J',this)">Rack J</button>
+    <button class="stock-filtro" onclick="selStockRack('K',this)">Rack K</button>
+    <button class="stock-filtro" onclick="selStockRack('L',this)">Rack L</button>
+    <button class="stock-filtro" onclick="selStockRack('M',this)">Rack M</button>
+  </div>
+  <!-- Sort y conteo -->
+  <div class="stock-sort">
+    <span class="stock-count" id="stock-count">Cargando...</span>
+    <button class="stock-sort-btn" onclick="toggleStockSort()">
+      Ordenar: <span id="stock-sort-lbl">A–Z</span>
+    </button>
+  </div>
+  <!-- Lista -->
+  <div id="stock-lista"></div>
+</div>
+
 <!-- MODO SALIDA -->
 <div class="modo" id="modo-salida">
   <div style="margin-bottom:12px;">
@@ -350,18 +451,23 @@ select:focus,input:focus{border-color:var(--azul);}
 <!-- Bottom nav -->
 <div class="bottom-nav">
   <button class="bnav-btn active" id="bnav-entrada" onclick="cambiarModo('entrada')">
-    <span class="bicon">+</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     <span>Entrada</span>
     <div class="bnav-bar"></div>
   </button>
   <button class="bnav-btn" id="bnav-salida" onclick="cambiarModo('salida')">
-    <span class="bicon" style="font-size:1rem;">↓</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 11 21 7 17 3"/><line x1="21" y1="7" x2="9" y2="7"/><polyline points="7 21 3 17 7 13"/><line x1="15" y1="17" x2="3" y2="17"/></svg>
     <span>Salida</span>
     <div class="bnav-bar"></div>
   </button>
   <button class="bnav-btn" id="bnav-consulta" onclick="cambiarModo('consulta')">
-    <span class="bicon">&#9776;</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/></svg>
     <span>Mover</span>
+    <div class="bnav-bar"></div>
+  </button>
+  <button class="bnav-btn" id="bnav-stock" onclick="cambiarModo('stock')">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+    <span>Stock</span>
     <div class="bnav-bar"></div>
   </button>
 </div>
@@ -409,6 +515,20 @@ select:focus,input:focus{border-color:var(--azul);}
     <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Nota (opcional)</div>
     <input type="text" id="sal-nota" placeholder="Ej: Despacho factura 12345"
       style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:.9rem;outline:none;margin-bottom:14px;">
+
+    <!-- Foto evidencia -->
+    <div style="margin-bottom:14px;">
+      <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Foto evidencia <span style="font-weight:400;text-transform:none;letter-spacing:0;">(opcional)</span></div>
+      <div id="sal-foto-preview" style="display:none;margin-bottom:8px;position:relative;">
+        <img id="sal-foto-img" src="" alt="Foto" style="width:100%;max-height:200px;object-fit:cover;border-radius:10px;border:1.5px solid var(--border);">
+        <button onclick="quitarFotoSalida()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:20px;padding:4px 10px;font-size:.75rem;font-weight:700;cursor:pointer;">✕ Quitar</button>
+      </div>
+      <label id="sal-foto-btn" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;border:2px dashed var(--border);border-radius:10px;cursor:pointer;color:var(--muted);font-size:.88rem;font-weight:600;background:var(--bg);transition:.15s;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 0 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        Tomar foto / Adjuntar imagen
+        <input type="file" id="sal-foto-input" accept="image/*" capture="environment" style="display:none;" onchange="previsualizarFoto(this)">
+      </label>
+    </div>
 
     <div id="sal-msg" style="font-size:.82rem;padding:8px 12px;border-radius:8px;display:none;margin-bottom:10px;"></div>
     <button id="sal-btn-confirmar" onclick="confirmarSalida()"
@@ -470,6 +590,60 @@ select:focus,input:focus{border-color:var(--azul);}
 </div>
 
 <script>
+// ── SISTEMA DE LOGIN / OPERADORES ──
+const OPERADORES = [
+  'Op1',
+  'Op2',
+  'Op3',
+  'Op4',
+  'Admin',
+];
+
+let operadorActual = sessionStorage.getItem('operador_bodega') || '';
+
+function iniciales(nombre) {
+  return nombre.split(' ').map(p => p[0]).join('').substring(0, 2).toUpperCase();
+}
+
+function renderOpList() {
+  const lista = document.getElementById('op-list');
+  lista.innerHTML = '';
+  OPERADORES.forEach(nombre => {
+    const btn = document.createElement('button');
+    btn.className = 'op-btn';
+    btn.innerHTML = `<div class="op-avatar">${iniciales(nombre)}</div><span>${nombre}</span>`;
+    btn.onclick = () => seleccionarOperador(nombre);
+    lista.appendChild(btn);
+  });
+}
+
+function seleccionarOperador(nombre) {
+  operadorActual = nombre;
+  sessionStorage.setItem('operador_bodega', nombre);
+  document.getElementById('login-overlay').style.display = 'none';
+  actualizarChipOperador();
+}
+
+function actualizarChipOperador() {
+  if (!operadorActual) return;
+  const chip = document.getElementById('op-chip-topbar');
+  chip.style.display = 'flex';
+  document.getElementById('op-chip-inicial').textContent = iniciales(operadorActual);
+  document.getElementById('op-chip-nombre').textContent = operadorActual.split(' ')[0];
+}
+
+function mostrarLogin() {
+  document.getElementById('login-overlay').style.display = 'flex';
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  renderOpList();
+  if (operadorActual) {
+    document.getElementById('login-overlay').style.display = 'none';
+    actualizarChipOperador();
+  }
+});
+
 // ── MODO SALIDA ──
 let salRackActual='J', salInvId=null, salTipo='total', salUpE=1;
 
@@ -542,14 +716,34 @@ function renderSalSVG(rack, datos){
           const posData=datos.find(p=>p.nivel===nivel&&p.posicion===pos);
           const ocupada=posData&&posData.inv_id;
           if(ocupada){
+            const posItems = posData.items && posData.items.length > 1 ? posData.items : null;
             rect.setAttribute('fill', posData.color||'#fe5000');
             rect.setAttribute('stroke','rgba(255,255,255,0.4)');rect.setAttribute('stroke-width','1');
             rect.style.cursor='pointer';
             rect.addEventListener('click',()=>{
               const codigo=`${rack}-${nivel}-${pos}`;
-              abrirSalSheet(posData, codigo);
+              const todosItems = posData.items && posData.items.length > 1 ? posData.items : null;
+              abrirSalSheet(posData, codigo, todosItems);
             });
             svg.appendChild(rect);
+            // Franjas si múltiples referencias
+            if(posItems){
+              const fH=CH/posItems.length;
+              posItems.forEach((item,fi)=>{
+                const fr=mkEl('rect');
+                fr.setAttribute('x',cx+1);fr.setAttribute('y',y0+fi*fH);
+                fr.setAttribute('width',CW-2);fr.setAttribute('height',fH);
+                fr.setAttribute('rx',fi===0?'3':'0');
+                fr.setAttribute('fill',item.color||'#888');
+                fr.setAttribute('pointer-events','none');
+                svg.appendChild(fr);
+              });
+              // Badge amarillo indicador
+              const badge=mkEl('rect');badge.setAttribute('x',cx+CW-8);badge.setAttribute('y',y0);
+              badge.setAttribute('width','8');badge.setAttribute('height','8');
+              badge.setAttribute('fill','#eee413');badge.setAttribute('rx','2');
+              badge.setAttribute('pointer-events','none');svg.appendChild(badge);
+            }
             const txt=mkEl('text');txt.setAttribute('x',cx+CW/2);txt.setAttribute('y',y0+CH/2);
             txt.setAttribute('text-anchor','middle');txt.setAttribute('dominant-baseline','central');
             txt.setAttribute('fill','#fff');txt.setAttribute('font-size','7');txt.setAttribute('font-weight','bold');
@@ -574,28 +768,90 @@ function renderSalSVG(rack, datos){
   });
 }
 
-function abrirSalSheet(item, codigo){
-  salInvId=item.inv_id;
+function abrirSalSheet(item, codigo, todosItems){
   salTipo='total';
-  salUpE=item.unidades_por_estiba||1;
-
   document.getElementById('sal-pos-badge').textContent=codigo;
-  document.getElementById('sal-ref-txt').textContent=item.referencia;
-  const lotes=item.lote?item.lote.split(' | ').map(l=>{
-    const m=l.trim().match(/^(.+?)\((\d+)u\)$/);
-    return m?`${m[1]} (${m[2]}u)`:l.trim();
-  }):[];
-  document.getElementById('sal-lote-txt').textContent=lotes.length?'Lotes: '+lotes.join(' · '):'Sin lote';
-  document.getElementById('sal-fecha-txt').textContent=item.fecha_entrada?'Entrada: '+item.fecha_entrada.substring(0,16):'';
-
-  // Reset tipo
-  selSalTipo('total');
-  document.getElementById('sal-unidades').value='';
   document.getElementById('sal-nota').value='';
   document.getElementById('sal-msg').style.display='none';
-  document.getElementById('sal-parcial-info').textContent=`Capacidad estiba: ${salUpE} u`;
+  document.getElementById('sal-unidades').value='';
 
+  // Si hay múltiples referencias en la posición, mostrar selector primero
+  const multiItems = todosItems && todosItems.length > 1 ? todosItems : null;
+  let selRefWrap = document.getElementById('sal-multi-ref-wrap');
+
+  if(multiItems){
+    // Crear o reutilizar selector de referencia
+    if(!selRefWrap){
+      selRefWrap = document.createElement('div');
+      selRefWrap.id = 'sal-multi-ref-wrap';
+      selRefWrap.style.cssText='margin-bottom:14px;';
+      // Insertar antes del bloque "Tipo de salida"
+      const tipoLabel = document.querySelector('#sal-overlay .mov-sheet > div[style*="Tipo de salida"], #sal-overlay .mov-sheet > div');
+      // Insertar después de sal-fecha-txt
+      const refTxt = document.getElementById('sal-fecha-txt');
+      refTxt.parentElement.parentElement.insertAdjacentElement('afterend', selRefWrap);
+    }
+    selRefWrap.style.display='block';
+    selRefWrap.innerHTML=`
+      <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">¿Qué referencia sale?</div>
+      ${multiItems.map((it,idx)=>{
+        const lotes=it.lote?it.lote.split(' | ').map(l=>{const m=l.trim().match(/^(.+?)\((\d+)u\)/);return m?`${m[1]} (${m[2]}u)`:l.trim();}):[];
+        return `<button onclick="selSalRef(${idx})" id="sal-ref-btn-${idx}"
+          style="width:100%;text-align:left;padding:10px 12px;margin-bottom:6px;border-radius:10px;border:2px solid var(--border);background:var(--bg);cursor:pointer;transition:.15s;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:${it.color||'#888'};flex-shrink:0;"></div>
+            <div style="font-size:.85rem;font-weight:700;">${it.referencia}</div>
+          </div>
+          <div style="font-size:.73rem;color:var(--muted);margin-top:3px;padding-left:18px;">${lotes.length?'Lotes: '+lotes.join(' · '):'Sin lote'} · ${it.unidades||it.unidades_por_estiba||'?'} u</div>
+        </button>`;
+      }).join('')}`;
+    // Guardar items para selección
+    window._salMultiItems = multiItems;
+    // Preseleccionar primero
+    selSalRef(0);
+    // Ocultar la info de ref (se muestra en el selector)
+    document.getElementById('sal-ref-txt').style.display='none';
+    document.getElementById('sal-lote-txt').style.display='none';
+  } else {
+    // Una sola referencia — comportamiento original
+    if(selRefWrap) selRefWrap.style.display='none';
+    window._salMultiItems = null;
+    document.getElementById('sal-ref-txt').style.display='';
+    document.getElementById('sal-lote-txt').style.display='';
+
+    salInvId=item.inv_id;
+    salUpE=item.unidades_por_estiba||1;
+    document.getElementById('sal-ref-txt').textContent=item.referencia;
+    const lotes=item.lote?item.lote.split(' | ').map(l=>{
+      const m=l.trim().match(/^(.+?)\((\d+)u\)$/);
+      return m?`${m[1]} (${m[2]}u)`:l.trim();
+    }):[];
+    document.getElementById('sal-lote-txt').textContent=lotes.length?'Lotes: '+lotes.join(' · '):'Sin lote';
+    document.getElementById('sal-fecha-txt').textContent=item.fecha_entrada?'Entrada: '+item.fecha_entrada.substring(0,16):'';
+    document.getElementById('sal-parcial-info').textContent=`Capacidad estiba: ${salUpE} u`;
+  }
+
+  selSalTipo('total');
   document.getElementById('sal-overlay').classList.add('show');
+}
+
+function selSalRef(idx){
+  const items = window._salMultiItems;
+  if(!items) return;
+  const it = items[idx];
+  salInvId = it.inv_id || it.id;
+  salUpE = it.unidades_por_estiba||1;
+  document.getElementById('sal-parcial-info').textContent=`Capacidad estiba: ${salUpE} u`;
+  // Resaltar botón seleccionado
+  items.forEach((_,i)=>{
+    const btn=document.getElementById(`sal-ref-btn-${i}`);
+    if(!btn) return;
+    if(i===idx){
+      btn.style.borderColor='#fe5000';btn.style.background='#fff5f5';
+    } else {
+      btn.style.borderColor='var(--border)';btn.style.background='var(--bg)';
+    }
+  });
 }
 
 function selSalTipo(tipo){
@@ -631,6 +887,14 @@ function validarSalida(){
 
 function cerrarSalSheet(){
   document.getElementById('sal-overlay').classList.remove('show');
+  // Limpiar foto
+  try {
+    document.getElementById('sal-foto-input').value = '';
+    document.getElementById('sal-foto-img').src = '';
+    document.getElementById('sal-foto-preview').style.display = 'none';
+    document.getElementById('sal-foto-btn').style.display = 'flex';
+    document.getElementById('sal-msg').style.display = 'none';
+  } catch(e) {}
 }
 
 async function confirmarSalida(){
@@ -639,19 +903,37 @@ async function confirmarSalida(){
   const nota=document.getElementById('sal-nota').value.trim();
   const unidades=salTipo==='parcial'?parseInt(document.getElementById('sal-unidades').value)||0:null;
   const msg=document.getElementById('sal-msg');
+
   try {
-    const resp=await fetch('/api/registrar_salida',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({inv_id:salInvId,tipo:salTipo,unidades,nota})
-    });
+    const fotoInput = document.getElementById('sal-foto-input');
+    const fotoFile = fotoInput && fotoInput.files && fotoInput.files[0];
+
+    let resp;
+    if (fotoFile) {
+      // Enviar como multipart con la foto
+      const fd = new FormData();
+      fd.append('inv_id', salInvId);
+      fd.append('tipo', salTipo);
+      if (unidades !== null) fd.append('unidades', unidades);
+      fd.append('nota', nota);
+      fd.append('operador', operadorActual || '');
+      fd.append('foto', fotoFile);
+      resp = await fetch('/api/registrar_salida', { method: 'POST', body: fd });
+    } else {
+      resp = await fetch('/api/registrar_salida', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({inv_id:salInvId,tipo:salTipo,unidades,nota,operador:operadorActual})
+      });
+    }
+
     const d=await resp.json();
     if(d.ok){
       msg.style.display='block';
       msg.style.background='#e8f5e9';msg.style.border='1px solid var(--verde)';msg.style.color='#1b5e20';
-      msg.textContent=salTipo==='total'?'Posición liberada correctamente':`Salida parcial registrada (${unidades} u)`;
+      msg.textContent=(salTipo==='total'?'Posición liberada correctamente':`Salida parcial registrada (${unidades} u)`)+(d.foto?' · 📷 Foto adjunta':'');
       btn.textContent='Listo';
-      setTimeout(()=>{ cerrarSalSheet(); cargarSalida(salRackActual); },1200);
+      setTimeout(()=>{ cerrarSalSheet(); cargarSalida(salRackActual); },1500);
     } else {
       msg.style.display='block';
       msg.style.background='#fff5f5';msg.style.border='1px solid #fe5000';msg.style.color='#c62828';
@@ -664,13 +946,35 @@ async function confirmarSalida(){
     btn.disabled=false;btn.style.opacity='1';btn.textContent='Confirmar salida';
   }
 }
+
+function previsualizarFoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('sal-foto-img').src = e.target.result;
+    document.getElementById('sal-foto-preview').style.display = 'block';
+    document.getElementById('sal-foto-btn').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function quitarFotoSalida() {
+  document.getElementById('sal-foto-input').value = '';
+  document.getElementById('sal-foto-img').src = '';
+  document.getElementById('sal-foto-preview').style.display = 'none';
+  document.getElementById('sal-foto-btn').style.display = 'flex';
+}
 function cambiarModo(modo) {
   document.getElementById('modo-entrada').classList.toggle('active', modo==='entrada');
   document.getElementById('modo-consulta').classList.toggle('active', modo==='consulta');
   document.getElementById('modo-salida').classList.toggle('active', modo==='salida');
+  document.getElementById('modo-stock').classList.toggle('active', modo==='stock');
   document.getElementById('bnav-entrada').classList.toggle('active', modo==='entrada');
   document.getElementById('bnav-consulta').classList.toggle('active', modo==='consulta');
   document.getElementById('bnav-salida').classList.toggle('active', modo==='salida');
+  document.getElementById('bnav-stock').classList.toggle('active', modo==='stock');
+  if (modo==='stock') cargarStock();
   // Topbar buttons
   document.getElementById('topbar-btn-consulta').style.display = modo==='entrada' ? '' : 'none';
   document.getElementById('topbar-btn-entrada').style.display = modo==='consulta'||modo==='salida' ? '' : 'none';
@@ -720,7 +1024,7 @@ async function cargarConsulta(rack) {
           ${item.actualizado_erp ? '<span style="font-size:.68rem;background:#e8f5e9;color:#1b5e20;padding:2px 6px;border-radius:4px;font-weight:700;">ERP ✓</span>' : ''}
         </div>
         <div class="cons-ref">${item.referencia}</div>
-        <div class="cons-lote">${lotes.length ? 'Lotes: '+lotes.join(' · ') : 'Sin lote'} · ${item.fecha_entrada ? item.fecha_entrada.substring(0,16) : ''}</div>
+        <div class="cons-lote">${lotes.length ? 'Lotes: '+lotes.join(' · ') : 'Sin lote'} · ${item.fecha_entrada ? item.fecha_entrada.substring(0,16) : ''}${item.operador ? ' · <span style="color:var(--azul);font-weight:600;">👤 '+item.operador+'</span>' : ''}</div>
       </div>
       <div style="color:var(--naranja);font-size:1.2rem;flex-shrink:0;">›</div>`;
     div.onclick = () => abrirMovSheet(item, codigo);
@@ -861,7 +1165,7 @@ async function confirmarMovMobile() {
     const r = await fetch('/api/mover_posicion', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({inv_id: movInvId, nueva_posicion_id: movPosSelId})
+      body: JSON.stringify({inv_id: movInvId, nueva_posicion_id: movPosSelId, operador: operadorActual})
     });
     const d = await r.json();
     msg.style.display = 'block';
@@ -908,7 +1212,14 @@ function mostrarTodas() {
 }
 
 function filtrarRefs(q) {
-  renderDropdown(q ? refs.filter(r => r.nombre.toLowerCase().includes(q.toLowerCase())) : refs);
+  if(!q) { renderDropdown(refs); return; }
+  const ql = q.toLowerCase();
+  renderDropdown(refs.filter(r =>
+    r.nombre.toLowerCase().includes(ql) ||
+    (r.grupo||'').toLowerCase().includes(ql) ||
+    (r.marca||'').toLowerCase().includes(ql) ||
+    (r.referencia_articulo||'').toLowerCase().includes(ql)
+  ));
 }
 
 function renderDropdown(lista) {
@@ -917,7 +1228,7 @@ function renderDropdown(lista) {
   dd.innerHTML = lista.map(r =>
     `<div class="ref-option" onclick="selRef(${r.id})">
       <div>${r.nombre}</div>
-      <div class="sub">${r.unidades_por_estiba} u/estiba · ${r.peso_unidad} kg/u</div>
+      <div class="sub">${[r.grupo, r.marca].filter(Boolean).join(' · ')} · ${r.unidades_por_estiba} u/estiba · ${r.peso_unidad} kg/u</div>
     </div>`).join('');
   dd.classList.add('show');
 }
@@ -931,12 +1242,12 @@ function toggleLista() {
 function selRef(id) {
   const ref = refs.find(r => r.id == id);
   if (!ref) return;
-  estado.refId = ref.id; estado.refNombre = ref.nombre; estado.upE = ref.unidades_por_estiba;
+  estado.refId = ref.id; estado.refNombre = ref.nombre; estado.upE = ref.unidades_por_estiba || 1;
   document.getElementById('ref-search').value = '';
   document.getElementById('ref-dropdown').classList.remove('show');
   document.getElementById('ref-sel-badge').style.display = 'block';
   document.getElementById('ref-sel-nombre').textContent = ref.nombre;
-  document.getElementById('ref-sel-info').textContent = `${ref.unidades_por_estiba} u/estiba · ${ref.peso_unidad} kg/u`;
+  document.getElementById('ref-sel-info').textContent = `${[ref.grupo, ref.marca].filter(Boolean).join(' · ')} · ${ref.unidades_por_estiba} u/estiba · ${ref.peso_unidad} kg/u`;
   calcEstibas();
 }
 
@@ -957,8 +1268,9 @@ function calcEstibas() {
     document.getElementById('alerta-calc').style.display = 'none';
     return;
   }
-  const completas = Math.floor(uni / estado.upE);
-  const sobrante = uni % estado.upE;
+  const upE = estado.upE > 0 ? estado.upE : 1;
+  const completas = Math.floor(uni / upE);
+  const sobrante = uni % upE;
   estado.estibas = completas; estado.sobrante = sobrante;
   document.getElementById('alerta-calc').style.display = 'flex';
   document.getElementById('alerta-calc-txt').innerHTML = `<strong>${uni}</strong> ÷ <strong>${estado.upE}</strong> u/estiba = <strong>${completas}</strong> estibas completas`;
@@ -1031,10 +1343,16 @@ function mkEstibaCard(num, unidades, esSob) {
       <span class="estiba-num" style="color:${esSob?'var(--naranja)':'var(--azul)'}">Estiba ${num}${esSob?' (sobrante)':''}</span>
       <span style="font-size:.75rem;color:var(--muted)">${unidades} u</span>
     </div>
+    <div style="display:flex;gap:5px;font-size:.68rem;color:var(--muted);margin-bottom:3px;padding:0 2px;">
+      <span style="flex:2;min-width:80px;">Núm. lote</span>
+      <span style="flex:1;min-width:50px;">Cantidad</span>
+      <span style="flex:1.4;min-width:70px;">Venc. (MM/AA)</span>
+    </div>
     <div id="lotes-${num}${esSob?'-sob':''}">
       <div class="lote-row">
-        <input type="text" placeholder="Núm. lote">
+        <input type="text" placeholder="Ej: L2024A">
         <input type="number" value="${unidades}" min="1">
+        <input type="text" class="inp-venc" placeholder="MM/AA" maxlength="5">
       </div>
     </div>
     <button class="btn-add-lote" onclick="addLote(${num},'${esSob}')">+ Otro lote en esta estiba</button>`;
@@ -1045,9 +1363,9 @@ function addLote(num, esSob) {
   const es = esSob==='true'||esSob===true;
   const lista = document.getElementById(`lotes-${num}${es?'-sob':''}`);
   const row = document.createElement('div'); row.className = 'lote-row';
-  // Sin índice fijo — confirmarEntrada lee del DOM directamente
-  row.innerHTML = `<input type="text" placeholder="Núm. lote">
+  row.innerHTML = `<input type="text" placeholder="Ej: L2024A">
     <input type="number" value="0" min="0">
+    <input type="text" class="inp-venc" placeholder="MM/AA" maxlength="5">
     <button class="btn-del" onclick="this.parentElement.remove()">×</button>`;
   lista.appendChild(row);
 }
@@ -1194,7 +1512,8 @@ function renderRackSVG() {
         if(!activa){
           rect.setAttribute('fill','#0d0d1a');svg.appendChild(rect);
         } else {
-          const posExist=racksDataCompleto.find(p=>p.rack===rack&&p.nivel===nivel&&p.posicion===pos&&p.inv_id);
+          const posItems=racksDataCompleto.filter(p=>p.rack===rack&&p.nivel===nivel&&p.posicion===pos&&p.inv_id);
+          const posExist=posItems[0]||null;
           const numEst=Object.keys(estado.ubicaciones).find(en=>{
             const u=estado.ubicaciones[en];return u&&u.nivel===nivel&&u.posicion===pos;
           });
@@ -1208,12 +1527,62 @@ function renderRackSVG() {
             txt.setAttribute('fill','#fff');txt.setAttribute('font-size','10');txt.setAttribute('font-weight','bold');
             txt.setAttribute('pointer-events','none');txt.textContent='E'+numEst;svg.appendChild(txt);
           } else if(posExist){
-            rect.setAttribute('fill',posExist.color||'#888');rect.setAttribute('opacity','0.8');
-            refColors[posExist.referencia]=posExist.color;svg.appendChild(rect);
+            // Posición ocupada — dibujar franjas si hay múltiples refs
+            const items = posItems.length > 0 ? posItems : [posExist];
+            if(items.length === 1){
+              rect.setAttribute('fill', items[0].color||'#888');
+            } else {
+              // Múltiples: dividir en franjas horizontales
+              rect.setAttribute('fill', items[0].color||'#888');
+              svg.appendChild(rect);
+              const fH = CH / items.length;
+              items.forEach((item, fi) => {
+                const fr = mkEl('rect');
+                fr.setAttribute('x', cx+1); fr.setAttribute('y', y0 + fi*fH);
+                fr.setAttribute('width', CW-2); fr.setAttribute('height', fH);
+                fr.setAttribute('rx', fi===0?'3':'0');
+                fr.setAttribute('fill', item.color||'#888');
+                fr.setAttribute('pointer-events','none');
+                svg.appendChild(fr);
+              });
+            }
+            // Indicador de peso si tiene múltiples
+            if(items.length > 1){
+              const badge = mkEl('rect');
+              badge.setAttribute('x', cx+CW-8); badge.setAttribute('y', y0);
+              badge.setAttribute('width','8'); badge.setAttribute('height','8');
+              badge.setAttribute('fill','#eee413'); badge.setAttribute('rx','2');
+              badge.setAttribute('pointer-events','none');
+              svg.appendChild(badge);
+            }
+            // Permitir agregar a posición ocupada si hay espacio
+            rect.style.cursor='pointer';
+            const posData = {id: posExist.id, nivel, posicion: pos, rack};
+            rect.addEventListener('click', async () => {
+              if(dragChip == null) return;
+              // Consultar peso actual
+              const rp = await fetch(`/api/posicion_info/${posExist.id}`);
+              const dp = await rp.json();
+              const unidadesReales = estado.unidades > 0 ? estado.unidades : estado.upE;
+              const pesoRef = unidadesReales * (refs.find(r=>r.id===estado.refId)?.peso_unidad||0);
+              if(dp.peso_total + pesoRef > 1000){
+                document.getElementById('ubicacion-status').innerHTML=
+                  `<span style="color:var(--naranja)">⚠ Excede 1000kg (${dp.peso_total}kg + ${pesoRef}kg)</span>`;
+                return;
+              }
+              // Preguntar confirmación
+              const refs_en_pos = dp.items.map(i=>i.referencia).join(', ');
+              const conf = confirm(`Posición ${rack}-${nivel}-${pos} tiene: ${refs_en_pos} (${dp.peso_total}kg)\n¿Agregar aquí? Quedarán ${dp.disponible - pesoRef}kg disponibles`);
+              if(conf) soltarEnPosOcupada(posExist.id, nivel, pos);
+            });
+            items.forEach(item => { if(item.referencia) refColors[item.referencia]=item.color; });
+            if(items.length === 1) svg.appendChild(rect);
             const txt=mkEl('text');txt.setAttribute('x',cx+CW/2);txt.setAttribute('y',y0+CH/2);
             txt.setAttribute('text-anchor','middle');txt.setAttribute('dominant-baseline','central');
-            txt.setAttribute('fill','#fff');txt.setAttribute('font-size','8');
-            txt.setAttribute('pointer-events','none');txt.textContent=pos;svg.appendChild(txt);
+            txt.setAttribute('fill','#fff');txt.setAttribute('font-size','7');
+            txt.setAttribute('pointer-events','none');
+            txt.textContent = items.length > 1 ? `${items.length}R` : pos;
+            svg.appendChild(txt);
           } else {
             rect.setAttribute('fill','#2a2a3e');rect.setAttribute('class','drop-target');
             const posL=posicionesLibresRack.find(pl=>pl.nivel===nivel&&pl.posicion===pos);
@@ -1252,6 +1621,17 @@ function renderRackSVG() {
   });
 }
 function mkEl(tag){return document.createElementNS('http://www.w3.org/2000/svg',tag);}
+
+function soltarEnPosOcupada(posId, nivel, pos) {
+  if(dragChip == null) return;
+  estado.ubicaciones[dragChip] = {posicion_id: posId, nivel, posicion: pos};
+  const chip = document.getElementById(`chip-${dragChip}`);
+  if(chip){chip.classList.add('ubicada');chip.setAttribute('draggable','false');}
+  const codigo = `${estado.rack}-${nivel}-${pos}`;
+  document.getElementById('ubicacion-status').innerHTML=
+    `<span style="color:var(--verde)">✓ E${dragChip} → ${codigo} (posición compartida)</span>`;
+  dragChip=null; renderRackSVG(); verificar();
+}
 
 function soltarEnPos(rect, posL, nivel, pos) {
   if (dragChip==null) return;
@@ -1302,8 +1682,23 @@ function verificar() {
 // ── PASO 4 ──
 function irPaso4() {
   const total=estado.estibas+(estado.incluirSobrante?1:0);
+  // Leer lotes del DOM para mostrar vencimiento en resumen
   const lotesTxt=estado.estibas_data.map(e=>{
-    const ls=e.lotes.filter(l=>l.lote).map(l=>`${l.lote}(${l.cantidad}u)`).join('+');
+    const cont = document.getElementById(`lotes-${e.num}${e.sobrante?'-sob':''}`);
+    let ls = '';
+    if(cont){
+      const rows = [...cont.querySelectorAll('.lote-row')];
+      ls = rows.map(row=>{
+        const inp = row.querySelectorAll('input');
+        const lv = inp[0]?inp[0].value.trim():'';
+        const cv = inp[1]?inp[1].value:'';
+        const vv = inp[2]?inp[2].value.trim():'';
+        if(!lv) return null;
+        return `${lv}(${cv}u)${vv?' venc:'+vv:''}`;
+      }).filter(Boolean).join('+');
+    } else {
+      ls = e.lotes.filter(l=>l.lote).map(l=>`${l.lote}(${l.cantidad}u)`).join('+');
+    }
     return `E${e.num}: ${ls||'sin lote'}`;
   }).join(' | ');
   document.getElementById('confirm-table').innerHTML=`
@@ -1332,15 +1727,19 @@ async function confirmarEntrada() {
         const inputs = row.querySelectorAll('input');
         const loteVal = inputs[0]?inputs[0].value.trim():'';
         const cantVal = inputs[1]?parseInt(inputs[1].value)||0:0;
-        if(loteVal) lotesDOM.push({lote:loteVal, cantidad:cantVal});
+        const vencVal = inputs[2]?inputs[2].value.trim():'';
+        if(loteVal) lotesDOM.push({lote:loteVal, cantidad:cantVal, fecha_vencimiento:vencVal});
       });
     } else if(d){
       lotesDOM = d.lotes.filter(l=>l.lote);
     }
-    return {posicion_id:ubi.posicion_id, lotes:lotesDOM, sobrante:esSob};
+    // Calcular unidades reales de esta estiba sumando cantidades de lotes del DOM
+    const sumaLotes = lotesDOM.reduce((s, l) => s + (l.cantidad || 0), 0);
+    const unidadesEstiba = sumaLotes > 0 ? sumaLotes : (d ? d.unidades : estado.upE);
+    return {posicion_id:ubi.posicion_id, lotes:lotesDOM, sobrante:esSob, unidades:unidadesEstiba};
   });
 
-  const payload={referencia_id:estado.refId,unidades:estado.unidades,estibas:Object.keys(estado.ubicaciones).length,rack:estado.rack,posiciones_estibas};
+  const payload={referencia_id:estado.refId,unidades:estado.unidades,estibas:Object.keys(estado.ubicaciones).length,rack:estado.rack,posiciones_estibas,operador:operadorActual};
   mostrarEnvio('enviando', 1);
   await enviarPayload(payload);
 }
@@ -1517,6 +1916,155 @@ document.addEventListener('click',e=>{if(!e.target.closest('.ref-wrap')) documen
 document.getElementById('mov-overlay').addEventListener('click', function(e){ if(e.target===this) cerrarMovSheet(); });
 document.getElementById('sal-overlay').addEventListener('click', function(e){ if(e.target===this) cerrarSalSheet(); });
 init();
+// ── MODO STOCK ──
+let stockData = [];
+let stockFiltrado = [];
+let stockRackFiltro = '';
+let stockSortAZ = true;
+let stockCargado = false;
+
+async function cargarStock() {
+  if (stockCargado) { filtrarStock(); return; }
+  document.getElementById('stock-count').textContent = 'Cargando...';
+  document.getElementById('stock-lista').innerHTML = '<div class="stock-empty">Cargando inventario...</div>';
+  try {
+    const r = await fetch('/api/stock_referencias');
+    stockData = await r.json();
+    stockCargado = true;
+    filtrarStock();
+  } catch(e) {
+    document.getElementById('stock-lista').innerHTML = '<div class="stock-empty">Error al cargar. Intenta de nuevo.</div>';
+  }
+}
+
+function selStockRack(rack, btn) {
+  stockRackFiltro = rack;
+  document.querySelectorAll('.stock-filtro').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filtrarStock();
+}
+
+function toggleStockSort() {
+  stockSortAZ = !stockSortAZ;
+  document.getElementById('stock-sort-lbl').textContent = stockSortAZ ? 'A–Z' : 'Mayor stock';
+  filtrarStock();
+}
+
+function filtrarStock() {
+  const q = (document.getElementById('stock-search').value || '').toLowerCase().trim();
+
+  let lista = stockData.filter(ref => {
+    // Filtro rack
+    if (stockRackFiltro) {
+      const tieneRack = ref.ubicaciones.some(u => u.rack === stockRackFiltro);
+      if (!tieneRack) return false;
+    }
+    // Filtro búsqueda
+    if (q) {
+      return ref.nombre.toLowerCase().includes(q) ||
+             ref.grupo.toLowerCase().includes(q) ||
+             ref.marca.toLowerCase().includes(q);
+    }
+    return true;
+  });
+
+  // Sort
+  lista = lista.slice().sort((a, b) => {
+    if (stockSortAZ) return a.nombre.localeCompare(b.nombre);
+    return b.total_unidades - a.total_unidades;
+  });
+
+  stockFiltrado = lista;
+  document.getElementById('stock-count').textContent =
+    `${lista.length} referencia${lista.length !== 1 ? 's' : ''} · ${lista.reduce((s,r) => s + r.total_unidades, 0).toLocaleString()} u en total`;
+
+  const cont = document.getElementById('stock-lista');
+  if (!lista.length) {
+    cont.innerHTML = '<div class="stock-empty">Sin resultados para la búsqueda</div>';
+    return;
+  }
+
+  cont.innerHTML = '';
+  lista.forEach(ref => {
+    const card = document.createElement('div');
+    card.className = 'stock-card';
+
+    // Filtrar ubicaciones si hay rack seleccionado
+    const ubics = stockRackFiltro
+      ? ref.ubicaciones.filter(u => u.rack === stockRackFiltro)
+      : ref.ubicaciones;
+
+    const totalU = stockRackFiltro
+      ? ubics.reduce((s, u) => s + u.unidades, 0)
+      : ref.total_unidades;
+
+    const erpPend = ref.pendientes_erp > 0
+      ? `<span style="color:var(--naranja);font-size:.68rem;font-weight:700;">${ref.pendientes_erp} pend. ERP</span>`
+      : '';
+
+    card.innerHTML = `
+      <div class="stock-card-header" onclick="toggleStockCard(this)">
+        <div class="stock-dot" style="background:${ref.color}"></div>
+        <div class="stock-info">
+          <div class="stock-nombre">${ref.nombre}</div>
+          <div class="stock-sub">${[ref.marca, ref.grupo].filter(Boolean).join(' · ')} · ${ref.total_estibas} estiba${ref.total_estibas !== 1 ? 's' : ''} ${erpPend}</div>
+        </div>
+        <div class="stock-nums">
+          <div class="stock-total-u">${totalU.toLocaleString()}</div>
+          <div class="stock-total-lbl">unidades</div>
+        </div>
+        <svg class="stock-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="stock-detail">
+        <div class="stock-detail-header">
+          <div class="stock-stat">
+            <div class="stock-stat-num" style="color:var(--azul)">${totalU.toLocaleString()}</div>
+            <div class="stock-stat-lbl">Unidades</div>
+          </div>
+          <div class="stock-stat">
+            <div class="stock-stat-num" style="color:var(--verde)">${ubics.length}</div>
+            <div class="stock-stat-lbl">Posiciones</div>
+          </div>
+          <div class="stock-stat">
+            <div class="stock-stat-num" style="color:var(--muted)">${ref.ultima_entrada || '—'}</div>
+            <div class="stock-stat-lbl">Últ. entrada</div>
+          </div>
+        </div>
+        <div class="stock-ubic-lista">
+          ${ubics.map(u => {
+            const loteClean = (u.lote || '').replace(/\(\d+u\)(\[v:[^\]]+\])?/g,'').replace(/\|/g,'·').trim();
+            return `<div class="stock-ubic-row">
+              <span class="stock-ubic-badge">${u.ubicacion}</span>
+              <div class="stock-ubic-info">
+                <div class="stock-ubic-u">${u.unidades} u</div>
+                <div class="stock-ubic-lote">${loteClean || 'Sin lote'} · ${u.fecha_entrada || ''}</div>
+              </div>
+              <div class="stock-erp-dot" style="background:${u.erp ? 'var(--verde)' : 'var(--naranja)'}" title="${u.erp ? 'ERP marcado' : 'Pendiente ERP'}"></div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+    cont.appendChild(card);
+  });
+}
+
+function toggleStockCard(header) {
+  const chevron = header.querySelector('.stock-chevron');
+  const detail  = header.nextElementSibling;
+  const isOpen  = detail.classList.contains('open');
+  // Cerrar todos
+  document.querySelectorAll('.stock-detail.open').forEach(d => {
+    d.classList.remove('open');
+    d.previousElementSibling.querySelector('.stock-chevron').classList.remove('open');
+  });
+  // Abrir este si estaba cerrado
+  if (!isOpen) {
+    detail.classList.add('open');
+    chevron.classList.add('open');
+    // Scroll suave
+    setTimeout(() => header.scrollIntoView({behavior:'smooth', block:'nearest'}), 50);
+  }
+}
+
 </script>
 </body>
-</html>

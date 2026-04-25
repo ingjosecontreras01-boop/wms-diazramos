@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kárdex — WMS Díaz Ramos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --azul: #0782c2;
+  --azul-dark: #055a8a;
+  --amarillo: #eee413;
+  --verde: #00b140;
+  --naranja: #fe5000;
+  --rojo: #e53935;
+  --morado: #7b2ff7;
+  --bg: #f0f4f8;
+  --white: #fff;
+  --text: #1a2a3a;
+  --muted: #6b7a8d;
+  --border: #d8e3ef;
+  --radius: 10px;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--azul);
+  padding: 13px 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 12px rgba(7,130,194,.25);
+}
+.topbar-left { display: flex; align-items: center; gap: 10px; }
+.topbar-logo { color: #fff; font-weight: 700; font-size: 1rem; letter-spacing: -.3px; }
+.topbar-logo span { color: var(--amarillo); }
+.topbar-badge {
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3);
+  color: #fff; font-size: .7rem; font-weight: 600; padding: 3px 10px;
+  border-radius: 20px; letter-spacing: .5px; text-transform: uppercase;
+}
+.btn-back {
+  background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.35);
+  color: #fff; padding: 7px 14px; border-radius: 8px; font-size: .82rem;
+  font-weight: 600; cursor: pointer; text-decoration: none;
+  display: flex; align-items: center; gap: 5px;
+  transition: background .15s;
+}
+.btn-back:hover { background: rgba(255,255,255,.28); }
+
+/* ── MAIN LAYOUT ── */
+.main { max-width: 1200px; margin: 0 auto; padding: 20px 20px 40px; }
+
+/* ── STATS ── */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: var(--white); border-radius: var(--radius);
+  border: 1px solid var(--border); padding: 16px 18px;
+  display: flex; flex-direction: column; gap: 4px;
+  transition: box-shadow .2s;
+}
+.stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+.stat-label {
+  font-size: .68rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .7px; color: var(--muted);
+}
+.stat-val {
+  font-family: var(--mono); font-size: 1.7rem; font-weight: 600;
+  line-height: 1.1;
+}
+.stat-val.blue  { color: var(--azul); }
+.stat-val.green { color: var(--verde); }
+.stat-val.red   { color: var(--naranja); }
+.stat-val.purple{ color: var(--morado); }
+.stat-sub { font-size: .72rem; color: var(--muted); }
+
+/* ── FILTROS ── */
+.filtros-card {
+  background: var(--white); border-radius: var(--radius);
+  border: 1px solid var(--border); padding: 16px 18px;
+  margin-bottom: 16px;
+}
+.filtros-title {
+  font-size: .72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .7px; color: var(--muted); margin-bottom: 12px;
+}
+.filtros-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+.filtro-group { display: flex; flex-direction: column; gap: 4px; }
+.filtro-group label { font-size: .72rem; font-weight: 600; color: var(--muted); }
+.filtro-group select,
+.filtro-group input {
+  padding: 8px 11px; border-radius: 8px; border: 1.5px solid var(--border);
+  font-size: .85rem; font-family: var(--sans); color: var(--text);
+  background: var(--bg); outline: none;
+  transition: border-color .15s;
+}
+.filtro-group select:focus,
+.filtro-group input:focus { border-color: var(--azul); }
+.filtro-group.grow { flex: 1; min-width: 180px; }
+
+.ref-wrap { position: relative; }
+.ref-dropdown {
+  position: absolute; top: 100%; left: 0; right: 0;
+  background: var(--white); border: 1.5px solid var(--azul);
+  border-top: none; border-radius: 0 0 8px 8px;
+  max-height: 200px; overflow-y: auto; z-index: 200;
+  display: none; box-shadow: 0 6px 18px rgba(0,0,0,.1);
+}
+.ref-dropdown.show { display: block; }
+.ref-opt {
+  padding: 9px 12px; cursor: pointer; font-size: .85rem;
+  border-bottom: 1px solid var(--border);
+  transition: background .1s;
+}
+.ref-opt:last-child { border-bottom: none; }
+.ref-opt:hover { background: #e8f4fd; }
+.ref-opt .sub { font-size: .72rem; color: var(--muted); }
+
+.btn-filtrar {
+  background: var(--azul); color: #fff; border: none;
+  padding: 8px 18px; border-radius: 8px; font-size: .85rem;
+  font-weight: 600; cursor: pointer; height: 37px;
+  transition: background .15s; white-space: nowrap;
+}
+.btn-filtrar:hover { background: var(--azul-dark); }
+.btn-limpiar {
+  background: var(--bg); color: var(--muted); border: 1.5px solid var(--border);
+  padding: 8px 14px; border-radius: 8px; font-size: .85rem;
+  font-weight: 600; cursor: pointer; height: 37px;
+  transition: all .15s; white-space: nowrap;
+}
+.btn-limpiar:hover { border-color: var(--naranja); color: var(--naranja); }
+
+/* ── TABLA ── */
+.tabla-card {
+  background: var(--white); border-radius: var(--radius);
+  border: 1px solid var(--border); overflow: hidden;
+}
+.tabla-header {
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  flex-wrap: wrap;
+}
+.tabla-header-title { font-size: .9rem; font-weight: 700; }
+.tabla-count { font-size: .78rem; color: var(--muted); }
+
+.btn-excel {
+  background: #1b5e20; color: #fff; border: none;
+  padding: 7px 14px; border-radius: 8px; font-size: .8rem;
+  font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px;
+  transition: background .15s;
+}
+.btn-excel:hover { background: #2e7d32; }
+
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  padding: 10px 14px; font-size: .72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .5px; color: var(--muted);
+  background: #f7f9fc; border-bottom: 1px solid var(--border);
+  text-align: left; white-space: nowrap;
+  cursor: pointer; user-select: none;
+}
+thead th:hover { color: var(--azul); }
+thead th.sort-asc::after  { content: ' ↑'; color: var(--azul); }
+thead th.sort-desc::after { content: ' ↓'; color: var(--azul); }
+
+tbody tr {
+  border-bottom: 1px solid #f0f4f8;
+  transition: background .1s;
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #f7fbff; }
+
+td {
+  padding: 10px 14px; font-size: .82rem; vertical-align: middle;
+}
+td.mono { font-family: var(--mono); font-size: .8rem; }
+
+/* Tipo badges */
+.tipo-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 9px; border-radius: 20px;
+  font-size: .7rem; font-weight: 700; white-space: nowrap;
+}
+.tipo-entrada   { background: #e8f5e9; color: #1b5e20; }
+.tipo-salida    { background: #fff3e0; color: #e65100; }
+.tipo-salida_parcial { background: #fff8e1; color: #f57f17; }
+.tipo-traslado  { background: #f3e5f5; color: #6a1b9a; }
+
+/* Dot referencia */
+.ref-dot {
+  display: inline-block; width: 8px; height: 8px;
+  border-radius: 50%; margin-right: 6px; flex-shrink: 0;
+  vertical-align: middle;
+}
+
+/* Ubicación chip */
+.ubi-chip {
+  font-family: var(--mono); font-size: .75rem;
+  background: #f0f4f8; border: 1px solid var(--border);
+  padding: 2px 7px; border-radius: 5px; color: var(--text);
+}
+
+/* Unidades */
+.uni-val { font-family: var(--mono); font-weight: 600; }
+.uni-pos { color: var(--verde); }
+.uni-neg { color: var(--naranja); }
+.uni-neu { color: var(--morado); }
+
+/* ── PAGINACIÓN ── */
+.pagination {
+  padding: 14px 18px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; flex-wrap: wrap;
+}
+.pag-info { font-size: .78rem; color: var(--muted); }
+.pag-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.pag-btn {
+  padding: 6px 12px; border-radius: 7px; border: 1.5px solid var(--border);
+  background: var(--bg); font-size: .78rem; font-weight: 600;
+  cursor: pointer; transition: all .15s; color: var(--text);
+}
+.pag-btn:hover:not(:disabled) { border-color: var(--azul); color: var(--azul); }
+.pag-btn.active { background: var(--azul); color: #fff; border-color: var(--azul); }
+.pag-btn:disabled { opacity: .4; cursor: default; }
+
+/* ── EMPTY / LOADING ── */
+.empty-state {
+  text-align: center; padding: 48px 20px;
+  color: var(--muted); font-size: .9rem;
+}
+.empty-icon { font-size: 2.5rem; margin-bottom: 10px; }
+.loading-row td {
+  text-align: center; padding: 32px; color: var(--muted);
+  font-size: .85rem;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .filtros-row { flex-direction: column; }
+  .filtro-group { width: 100%; }
+  table { display: block; overflow-x: auto; }
+  .topbar { padding: 11px 14px; }
+  .main { padding: 14px 12px 40px; }
+}
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <img src="/static/logo.jpeg" alt="logo"
+         style="height:30px;width:30px;border-radius:6px;object-fit:cover;border:2px solid rgba(255,255,255,.3);"
+         onerror="this.style.display='none'">
+    <span class="topbar-logo">Dist. <span>Díaz Ramos</span></span>
+    <span class="topbar-badge">Kárdex</span>
+  </div>
+  <a href="/escritorio" class="btn-back">← Panel</a>
+</div>
+
+<div class="main">
+
+  <!-- STATS -->
+  <div class="stats-grid" id="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total movimientos</div>
+      <div class="stat-val blue" id="st-total">—</div>
+      <div class="stat-sub">en el filtro actual</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Unidades entraron</div>
+      <div class="stat-val green" id="st-entradas">—</div>
+      <div class="stat-sub">entradas registradas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Unidades salieron</div>
+      <div class="stat-val red" id="st-salidas">—</div>
+      <div class="stat-sub">salidas totales + parciales</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Traslados</div>
+      <div class="stat-val purple" id="st-traslados">—</div>
+      <div class="stat-sub">cambios de posición</div>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filtros-card">
+    <div class="filtros-title">🔍 Filtros</div>
+    <div class="filtros-row">
+
+      <!-- Referencia con autocomplete -->
+      <div class="filtro-group grow">
+        <label>Referencia</label>
+        <div class="ref-wrap">
+          <input type="text" id="f-ref-input" placeholder="Buscar referencia..."
+                 autocomplete="off"
+                 oninput="filtrarRefs(this.value)"
+                 onfocus="abrirDropdown()"
+                 onblur="cerrarDropdown()">
+          <div class="ref-dropdown" id="ref-dropdown"></div>
+        </div>
+        <input type="hidden" id="f-ref-id">
+      </div>
+
+      <!-- Tipo -->
+      <div class="filtro-group">
+        <label>Tipo</label>
+        <select id="f-tipo">
+          <option value="">Todos</option>
+          <option value="entrada">Entrada</option>
+          <option value="salida">Salida total</option>
+          <option value="salida_parcial">Salida parcial</option>
+          <option value="traslado">Traslado</option>
+        </select>
+      </div>
+
+      <!-- Operador -->
+      <div class="filtro-group">
+        <label>Operador</label>
+        <select id="f-operador">
+          <option value="">Todos</option>
+        </select>
+      </div>
+
+      <!-- Fechas -->
+      <div class="filtro-group">
+        <label>Desde</label>
+        <input type="date" id="f-desde">
+      </div>
+      <div class="filtro-group">
+        <label>Hasta</label>
+        <input type="date" id="f-hasta">
+      </div>
+
+      <button class="btn-filtrar" onclick="buscar(1)">Filtrar</button>
+      <button class="btn-limpiar" onclick="limpiar()">Limpiar</button>
+    </div>
+  </div>
+
+  <!-- TABLA -->
+  <div class="tabla-card">
+    <div class="tabla-header">
+      <div>
+        <div class="tabla-header-title">Movimientos</div>
+        <div class="tabla-count" id="tabla-count">Cargando...</div>
+      </div>
+      <button class="btn-excel" onclick="exportarExcel()">
+        ⬇ Exportar Excel
+      </button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortBy('fecha')">Fecha</th>
+          <th onclick="sortBy('tipo')">Tipo</th>
+          <th onclick="sortBy('referencia')">Referencia</th>
+          <th onclick="sortBy('ubicacion')">Ubicación</th>
+          <th onclick="sortBy('unidades')">Unidades</th>
+          <th onclick="sortBy('lote')">Lote</th>
+          <th onclick="sortBy('operador')">Operador</th>
+          <th>Notas</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr class="loading-row"><td colspan="8">⏳ Cargando movimientos...</td></tr>
+      </tbody>
+    </table>
+
+    <div class="pagination" id="pagination" style="display:none"></div>
+  </div>
+
+</div>
+
+<script>
+// ── Estado ──
+let todosMovs = [];   // datos actuales (página en memoria)
+let paginaActual = 1;
+let totalPages = 1;
+let sortCol = 'fecha';
+let sortDir = 'desc';
+let refs = [];
+
+// ── Init ──
+window.addEventListener('DOMContentLoaded', async () => {
+  // Fecha default: último mes
+  const hoy = new Date();
+  const hace30 = new Date(hoy); hace30.setDate(hoy.getDate() - 30);
+  document.getElementById('f-hasta').value = fmt(hoy);
+  document.getElementById('f-desde').value = fmt(hace30);
+
+  await cargarRefs();
+  buscar(1);
+});
+
+function fmt(d) {
+  return d.toISOString().slice(0, 10);
+}
+
+// ── Cargar referencias para autocomplete ──
+async function cargarRefs() {
+  const r = await fetch('/api/referencias');
+  refs = await r.json();
+}
+
+function filtrarRefs(q) {
+  document.getElementById('f-ref-id').value = '';
+  const dd = document.getElementById('ref-dropdown');
+  if (!q) { dd.innerHTML = ''; dd.classList.remove('show'); return; }
+  const found = refs.filter(r =>
+    r.nombre.toLowerCase().includes(q.toLowerCase()) ||
+    (r.marca && r.marca.toLowerCase().includes(q.toLowerCase()))
+  ).slice(0, 20);
+  if (!found.length) { dd.innerHTML = '<div class="ref-opt" style="color:var(--muted)">Sin resultados</div>'; dd.classList.add('show'); return; }
+  dd.innerHTML = found.map(r => `
+    <div class="ref-opt" onmousedown="selRef(${r.id},'${r.nombre.replace(/'/g,"\\'")}')">
+      <span class="ref-dot" style="background:${r.color||'#888'}"></span>
+      ${r.nombre}
+      <div class="sub">${r.marca||''} ${r.grupo ? '· '+r.grupo : ''}</div>
+    </div>`).join('');
+  dd.classList.add('show');
+}
+
+function selRef(id, nombre) {
+  document.getElementById('f-ref-id').value = id;
+  document.getElementById('f-ref-input').value = nombre;
+  document.getElementById('ref-dropdown').classList.remove('show');
+}
+
+function abrirDropdown() {
+  const q = document.getElementById('f-ref-input').value;
+  if (q) filtrarRefs(q);
+}
+function cerrarDropdown() {
+  setTimeout(() => document.getElementById('ref-dropdown').classList.remove('show'), 150);
+}
+
+// ── Buscar ──
+async function buscar(page = 1) {
+  paginaActual = page;
+  document.getElementById('tbody').innerHTML = '<tr class="loading-row"><td colspan="8">⏳ Cargando...</td></tr>';
+  document.getElementById('pagination').style.display = 'none';
+
+  const params = new URLSearchParams();
+  const refId   = document.getElementById('f-ref-id').value;
+  const tipo    = document.getElementById('f-tipo').value;
+  const op      = document.getElementById('f-operador').value;
+  const desde   = document.getElementById('f-desde').value;
+  const hasta   = document.getElementById('f-hasta').value;
+
+  if (refId)  params.set('ref_id', refId);
+  if (tipo)   params.set('tipo', tipo);
+  if (op)     params.set('operador', op);
+  if (desde)  params.set('desde', desde);
+  if (hasta)  params.set('hasta', hasta);
+  params.set('page', page);
+
+  try {
+    const r = await fetch('/api/kardex?' + params.toString());
+    const data = await r.json();
+    todosMovs = data.movimientos;
+    totalPages = data.pages;
+
+    // Stats
+    document.getElementById('st-total').textContent    = data.stats.total_movs.toLocaleString();
+    document.getElementById('st-entradas').textContent = data.stats.entradas.toLocaleString();
+    document.getElementById('st-salidas').textContent  = data.stats.salidas.toLocaleString();
+    document.getElementById('st-traslados').textContent = data.stats.traslados.toLocaleString();
+
+    // Operadores
+    const opSel = document.getElementById('f-operador');
+    const opVal = opSel.value;
+    opSel.innerHTML = '<option value="">Todos</option>' +
+      data.operadores.map(o => `<option value="${o}" ${o===opVal?'selected':''}>${o}</option>`).join('');
+
+    // Tabla
+    document.getElementById('tabla-count').textContent =
+      `${data.total.toLocaleString()} movimientos — página ${page} de ${data.pages}`;
+
+    renderTabla(todosMovs);
+    renderPaginacion(page, data.pages, data.total);
+
+  } catch(e) {
+    document.getElementById('tbody').innerHTML = '<tr class="loading-row"><td colspan="8">❌ Error al cargar datos</td></tr>';
+  }
+}
+
+// ── Render tabla ──
+function renderTabla(movs) {
+  if (!movs.length) {
+    document.getElementById('tbody').innerHTML = `
+      <tr><td colspan="8">
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          Sin movimientos para los filtros seleccionados
+        </div>
+      </td></tr>`;
+    return;
+  }
+
+  document.getElementById('tbody').innerHTML = movs.map(m => {
+    const tipoLabel = {
+      'entrada': 'Entrada',
+      'salida': 'Salida',
+      'salida_parcial': 'Parcial',
+      'traslado': 'Traslado'
+    }[m.tipo] || m.tipo;
+
+    const tipoClass = 'tipo-' + m.tipo;
+    const uniClass  = m.tipo === 'entrada' ? 'uni-pos' : m.tipo === 'traslado' ? 'uni-neu' : 'uni-neg';
+    const uniPref   = m.tipo === 'entrada' ? '+' : m.tipo === 'traslado' ? '⇄' : '-';
+    const unidades  = m.unidades > 0 ? `<span class="uni-val ${uniClass}">${uniPref}${m.unidades} u</span>` : '<span style="color:var(--muted)">—</span>';
+
+    // Lote: limpiar formato interno
+    const loteClean = (m.lote||'').replace(/\(\d+u\)(\[v:[^\]]+\])?/g,'').replace(/\|/g,'·').trim() || '—';
+
+    // Ubicación: si es traslado mostrar ambas
+    let ubiHtml = '';
+    if (m.tipo === 'traslado' && m.ubicacion && m.ubicacion.includes('→')) {
+      const partes = m.ubicacion.split('→');
+      ubiHtml = `<span class="ubi-chip" style="background:#fff5f5;color:#fe5000">${partes[0].trim()}</span>
+                 <span style="color:var(--muted);font-size:.75rem"> → </span>
+                 <span class="ubi-chip" style="background:#e8f5e9;color:#2e7d32">${partes[1].trim()}</span>`;
+    } else {
+      ubiHtml = `<span class="ubi-chip">${m.ubicacion||'—'}</span>`;
+    }
+
+    const fecha = (m.fecha||'').substring(0,16).replace('T',' ');
+    const notas = m.notas && m.notas !== 'Salida total' ? `<span style="font-size:.72rem;color:var(--muted);font-style:italic">${m.notas}</span>` : '';
+
+    return `<tr>
+      <td class="mono" style="white-space:nowrap;font-size:.75rem;color:var(--muted)">${fecha}</td>
+      <td><span class="tipo-badge ${tipoClass}">${tipoLabel}</span></td>
+      <td>
+        <span class="ref-dot" style="background:${m.color||'#888'}"></span>
+        <span style="font-size:.82rem;font-weight:500">${m.referencia||'—'}</span>
+      </td>
+      <td>${ubiHtml}</td>
+      <td>${unidades}</td>
+      <td style="font-size:.78rem;color:var(--muted);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${loteClean}">${loteClean}</td>
+      <td style="font-size:.78rem">${m.operador||'—'}</td>
+      <td>${notas}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Paginación ──
+function renderPaginacion(page, pages, total) {
+  const pag = document.getElementById('pagination');
+  if (pages <= 1) { pag.style.display = 'none'; return; }
+  pag.style.display = 'flex';
+
+  const inicio = (page - 1) * 50 + 1;
+  const fin = Math.min(page * 50, total);
+  pag.innerHTML = `
+    <div class="pag-info">Mostrando ${inicio}–${fin} de ${total}</div>
+    <div class="pag-btns">
+      <button class="pag-btn" onclick="buscar(1)" ${page===1?'disabled':''}>«</button>
+      <button class="pag-btn" onclick="buscar(${page-1})" ${page===1?'disabled':''}>‹ Ant</button>
+      ${paginasVisibles(page, pages).map(p =>
+        p === '...'
+          ? `<span class="pag-btn" style="cursor:default;opacity:.5">…</span>`
+          : `<button class="pag-btn ${p===page?'active':''}" onclick="buscar(${p})">${p}</button>`
+      ).join('')}
+      <button class="pag-btn" onclick="buscar(${page+1})" ${page===pages?'disabled':''}>Sig ›</button>
+      <button class="pag-btn" onclick="buscar(${pages})" ${page===pages?'disabled':''}>»</button>
+    </div>`;
+}
+
+function paginasVisibles(page, pages) {
+  if (pages <= 7) return Array.from({length: pages}, (_, i) => i + 1);
+  const ps = new Set([1, pages, page]);
+  if (page > 1) ps.add(page - 1);
+  if (page < pages) ps.add(page + 1);
+  const sorted = [...ps].sort((a,b) => a-b);
+  const result = [];
+  let prev = 0;
+  for (const p of sorted) {
+    if (p - prev > 1) result.push('...');
+    result.push(p);
+    prev = p;
+  }
+  return result;
+}
+
+// ── Sort ──
+function sortBy(col) {
+  if (sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  else { sortCol = col; sortDir = 'desc'; }
+
+  document.querySelectorAll('thead th').forEach(th => {
+    th.classList.remove('sort-asc', 'sort-desc');
+  });
+  const ths = document.querySelectorAll('thead th');
+  const cols = ['fecha','tipo','referencia','ubicacion','unidades','lote','operador','notas'];
+  const idx = cols.indexOf(col);
+  if (idx >= 0) ths[idx].classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+
+  const sorted = [...todosMovs].sort((a, b) => {
+    let va = a[col] || ''; let vb = b[col] || '';
+    if (col === 'unidades') { va = Number(va); vb = Number(vb); }
+    if (va < vb) return sortDir === 'asc' ? -1 : 1;
+    if (va > vb) return sortDir === 'asc' ?  1 : -1;
+    return 0;
+  });
+  renderTabla(sorted);
+}
+
+// ── Limpiar ──
+function limpiar() {
+  document.getElementById('f-ref-input').value = '';
+  document.getElementById('f-ref-id').value = '';
+  document.getElementById('f-tipo').value = '';
+  document.getElementById('f-operador').value = '';
+  const hoy = new Date();
+  const hace30 = new Date(hoy); hace30.setDate(hoy.getDate() - 30);
+  document.getElementById('f-hasta').value = fmt(hoy);
+  document.getElementById('f-desde').value = fmt(hace30);
+  buscar(1);
+}
+
+// ── Exportar Excel ──
+function exportarExcel() {
+  const params = new URLSearchParams();
+  const refId  = document.getElementById('f-ref-id').value;
+  const tipo   = document.getElementById('f-tipo').value;
+  const op     = document.getElementById('f-operador').value;
+  const desde  = document.getElementById('f-desde').value;
+  const hasta  = document.getElementById('f-hasta').value;
+  if (refId)  params.set('ref_id', refId);
+  if (tipo)   params.set('tipo', tipo);
+  if (op)     params.set('operador', op);
+  if (desde)  params.set('desde', desde);
+  if (hasta)  params.set('hasta', hasta);
+  params.set('export', 'xlsx');
+  window.location.href = '/api/kardex_export?' + params.toString();
+}
+
+// Tecla Enter en filtros
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') buscar(1);
+});
+</script>
+</body>
+</html>
